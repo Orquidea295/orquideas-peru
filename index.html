@@ -14,22 +14,18 @@
 <script src="datos/registros.js"></script>
 <script>window.DETALLE = {};</script>
 <script src="datos/detalle.js"></script>
-<script src="datos/detalle_1.js"></script>
-<script src="datos/detalle_2.js"></script>
-<script src="datos/detalle_3.js"></script>
-<script src="datos/detalle_4.js"></script>
 <script src="datos/departamentos.js"></script>
 <script src="datos/provincias.js"></script>
 <script src="datos/anp.js"></script>
 <script src="datos/capas_base.js"></script>
 <script src="datos/capas_extra.js"></script>
-<script src="datos/capas_ecosistemas.js"></script>
+<script src="datos/fuentes_dep.js"></script>
 <script src="datos/figuras.js"></script>
 <script src="datos/vacios.js"></script>
 <script src="datos/checklist.js"></script>
 <script src="datos/explicaciones.js" onerror="window.EXPLICACIONES = {}"></script>
 <style>
-:root { --azul:#1F4E78; --azul2:#2E6DA4; --morado:#5B2C6F; --naranja:#C55A11; --verde:#2e7d32; --gris:#f3f3f3; --borde:#d0d0d0; --texto:#222; --fondo:#f5f6f8; }
+:root { --azul:#1F5135; --azul2:#2E7048; --violeta:#6B4C9A; --morado:#5B2C6F; --naranja:#C55A11; --verde:#2e7d32; --gris:#f3f1ec; --borde:#d9d5cc; --texto:#222; --fondo:#FAF8F3; }
 * { box-sizing:border-box; }
 html, body { margin:0; height:100%; font-family:"Times New Roman", Times, serif; color:var(--texto); background:#fff; font-size:15px; }
 body { display:flex; flex-direction:column; }
@@ -152,13 +148,73 @@ button.prim { background:var(--azul); color:#fff; }
   #vistas button { padding:10px 8px; font-size:14px; } #barra { padding:6px 10px; gap:6px; }
   .tarjetas { grid-template-columns:1fr; } .leyenda { font-size:11px; max-width:180px; } #capas { min-width:0; }
 }
+
+body { background:var(--fondo); }
+#vistas button { padding:18px 8px 15px; font-size:14.5px; white-space:nowrap; } #barra .marca span { font-size:11.5px; }
+@media (max-width: 1100px) { #barra .marca span { display:none; } }
+#barra { background:var(--azul); }
+#solicitar { background:#C9B6E4; color:#2b1a45; } #solicitar:hover { background:#d8c9ee; }
+#vistas button.activa { border-bottom-color:#C9B6E4; }
+section h2, .pagina h1, .texto h2 { color:var(--azul); }
+details.plegable { margin-top:8px; border-top:1px solid #eee; padding-top:6px; }
+details.plegable summary { cursor:pointer; color:var(--azul); font-weight:bold; font-size:14px; }
+.guia-lista { margin:6px 0 0; padding-left:18px; font-size:13.5px; line-height:1.4; }
+.portada { background:linear-gradient(135deg, #1F5135 0%, #2E7048 60%, #6B4C9A 140%); color:#fff; border-radius:12px; padding:34px 28px; }
+.portada h1 { color:#fff !important; font-size:32px; margin:0 0 8px; }
+.portada p { font-size:18px; max-width:720px; margin:0 0 18px; opacity:.95; }
+.botones { display:flex; flex-wrap:wrap; gap:10px; }
+button.grande { font-size:16px; padding:11px 18px; border-radius:6px; border:1px solid #fff; background:rgba(255,255,255,.12); color:#fff; }
+button.grande.prim { background:#fff; color:var(--azul); font-weight:bold; }
+h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
+.sugeridas { display:flex; flex-wrap:wrap; gap:10px; }
+.sugeridas button { background:#fff; border:1px solid var(--borde); color:var(--texto); border-radius:20px; padding:8px 14px; font-size:14.5px; }
+.sugeridas button:hover { border-color:var(--violeta); color:var(--violeta); }
+.esp-tarjeta { background:#fff; border:1px solid #e3e1da; border-radius:10px; padding:14px 16px; display:flex; flex-direction:column; gap:6px; }
+.esp-tarjeta h3 { margin:0; font-size:17px; color:#222; } .esp-tarjeta h3 i { color:var(--azul); }
+.esp-tarjeta .aut { font-size:13px; color:#666; font-style:normal; }
+.esp-tarjeta .lin { font-size:14px; color:#333; }
+.esp-tarjeta .acc { display:flex; gap:8px; margin-top:auto; padding-top:6px; }
+.esp-tarjeta .acc button { font-size:13.5px; padding:5px 10px; }
+.cat-esp { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:14px; }
+.filtros-esp { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:8px; max-width:980px; }
+.filtros-esp input, .filtros-esp select { width:100%; padding:7px 8px; font:inherit; border:1px solid var(--borde); border-radius:6px; background:#fff; }
+.dep-botones { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:8px; margin:12px 0 18px; }
+.dep-botones button { background:#fff; border:1px solid #e3e1da; border-radius:8px; padding:9px 10px; text-align:left; color:var(--texto); }
+.dep-botones button b { display:block; color:var(--azul); font-size:15px; }
+.dep-botones button span { font-size:12.5px; color:#666; }
+.dep-botones button.activa { border-color:var(--violeta); box-shadow:0 0 0 2px rgba(107,76,154,.25); }
+.dep-panel { background:#fff; border:1px solid #e3e1da; border-radius:10px; padding:18px 20px; }
+.dep-panel h2 { margin:0 0 10px; color:var(--azul); font-size:22px; }
+.dep-panel ol { margin:6px 0 0; padding-left:20px; font-size:14px; line-height:1.45; }
+.lista-esp { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.lista-esp a { font-style:italic; font-size:14px; background:#f3f0f7; border-radius:4px; padding:2px 7px; color:#333; text-decoration:none; cursor:pointer; }
+.lista-esp a:hover { background:#e6dff0; }
+.pestanas { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 16px; }
+.pestanas button { border-radius:20px; background:#fff; border:1px solid var(--borde); color:var(--texto); padding:7px 14px; }
+.pestanas button.activa { background:var(--azul); color:#fff; border-color:var(--azul); }
+.glosario { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:10px; }
+.glosario details { background:#fff; border:1px solid #e3e1da; border-radius:8px; padding:9px 12px; }
+.glosario summary { cursor:pointer; font-weight:bold; color:var(--azul); }
+.glosario p { margin:6px 0 0; font-size:14.5px; line-height:1.45; }
+#modal { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:2500; display:flex; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto; }
+.modal-caja { background:#fff; border-radius:10px; max-width:720px; width:100%; padding:20px 22px; position:relative; }
+.modal-caja .cerrar { position:absolute; top:8px; right:10px; border:none; font-size:26px; background:none; color:#555; }
+.modal-caja table { border-collapse:collapse; font-size:14.5px; width:100%; } .modal-caja td { padding:2px 8px 2px 0; vertical-align:top; } .modal-caja td:first-child { color:#666; width:38%; }
+.chip.fuente { background:#eee; color:#333; font-weight:normal; }
+@media (max-width: 760px) { .filtros-esp { grid-template-columns:1fr 1fr; } .filtros-esp input { grid-column:1 / -1; } .portada { padding:24px 18px; } .portada h1 { font-size:25px; } .portada p { font-size:16px; } }
+
+#aviso { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#2b2b2b; color:#fff; padding:10px 16px; border-radius:8px; z-index:3000; max-width:90vw; font-size:14.5px; cursor:pointer; }
+@media (max-width: 760px) { #barra { flex-wrap:wrap; } #vistas { flex-wrap:wrap; overflow:visible; width:100%; order:3; gap:0; } #vistas button { padding:7px 7px; font-size:13.5px; } }
 </style>
 </head>
 <body>
 <div id="barra">
   <div class="marca"><b>Orquídeas del Perú</b><span>Registros de herbarios, bases digitales y literatura</span></div>
   <nav id="vistas">
-    <button data-v="mapa" class="activa">Mapa</button>
+    <button data-v="inicio" class="activa">Inicio</button>
+    <button data-v="mapa">Mapa</button>
+    <button data-v="especies">Especies</button>
+    <button data-v="deps">Departamentos</button>
     <button data-v="estad">Estadísticas</button>
     <button data-v="amen">Amenazadas y endémicas</button>
     <button data-v="acerca">Acerca</button>
@@ -166,36 +222,40 @@ button.prim { background:var(--azul); color:#fff; }
   <a id="solicitar" href="#" target="_blank" rel="noopener">Solicitar datos</a>
 </div>
 
-<div id="v_mapa" class="vista">
+<div id="v_mapa" class="vista" hidden>
   <div id="panel">
     <section>
-      <div class="guia"><b>¿Cómo usar el mapa?</b><ol>
-        <li>Elija una especie, un género o un lugar en los filtros.</li>
+      <h2>Registros mostrados con los filtros actuales</h2>
+      <div id="resumen"></div>
+      <details class="plegable"><summary>Cómo explorar el mapa</summary><ol class="guia-lista">
+        <li>Busque una especie, un género o un departamento.</li>
         <li>Los círculos con número agrupan registros: acérquese o haga clic para separarlos.</li>
         <li>Haga clic en un punto para ver su procedencia; el círculo celeste marca su incertidumbre.</li>
-        <li>Cambie a <b>Satélite</b> o <b>Calles</b> en «Capas y fondo» para ver dónde cae cada registro.</li></ol></div>
+        <li>En «Capas y fondo» cambie a <b>Satélite</b> para ver dónde cae cada registro.</li>
+        <li>Con «Ocultar duplicados», una colecta presente en varias fuentes se cuenta una vez. Los registros sin coordenadas cuentan en la riqueza del departamento, pero no son puntos.</li></ol></details>
     </section>
     <section>
-      <h2>Clasificación</h2>
-      <label>Subfamilia</label><select id="f_subfamilia"></select>
-      <label>Tribu</label><select id="f_tribu"></select>
-      <label>Subtribu</label><select id="f_subtribu"></select>
-      <label>Género</label><select id="f_genero"></select>
+      <h2>Buscar</h2>
       <label>Especie (escriba parte del nombre)</label><input type="text" id="f_nombre" list="nombres_lista" placeholder="p. ej. Masdevallia veitchiana"><datalist id="nombres_lista"></datalist>
-    </section>
-    <section>
-      <h2>Lugar, fuente y fecha</h2>
+      <label>Género</label><select id="f_genero"></select>
       <label>Departamento</label><select id="f_dep"></select>
       <div class="fila"><div><label>Provincia</label><select id="f_prov"></select></div><div><label>Distrito</label><select id="f_dist"></select></div></div>
-      <label>Fuente</label><select id="f_fuente"></select>
-      <div class="fila"><div><label>Año desde</label><input type="number" id="f_a1" placeholder="1700"></div><div><label>hasta</label><input type="number" id="f_a2" placeholder="2026"></div></div>
-      <div class="fila"><div><label>Altitud desde (m)</label><input type="number" id="f_h1" placeholder="0"></div><div><label>hasta</label><input type="number" id="f_h2" placeholder="6800"></div></div>
-      <label>Estado de conservación</label><select id="f_estado"><option value="">Todas</option><option value="end">Endémicas del Perú (WCVP)</option><option value="leon">Endémicas según León et al. (2006)</option><option value="ame">Amenazadas (UICN o D.S. 043: CR, EN, VU)</option><option value="cit1">CITES Apéndice I</option></select>
-      <div class="chk"><input type="checkbox" id="f_cand"><label for="f_cand" style="margin:0">Solo puntos para modelar</label></div>
-      <div class="chk"><input type="checkbox" id="f_georef" checked><label for="f_georef" style="margin:0">Mostrar coordenadas estimadas (±10 km)</label></div>
-      <div class="chk"><input type="checkbox" id="f_dudosa"><label for="f_dudosa" style="margin:0">Incluir presencia dudosa</label></div>
-      <div class="chk"><input type="checkbox" id="f_dup" checked><label for="f_dup" style="margin:0">Ocultar duplicados</label></div>
-      <div class="fila" style="margin-top:8px"><button id="limpiar">Limpiar filtros</button><button class="prim" id="encuadrar">Acercar al filtro</button></div>
+      <details class="plegable"><summary>Más filtros</summary>
+        <label>Fuente</label><select id="f_fuente"></select>
+        <div class="fila"><div><label>Año desde</label><input type="number" id="f_a1" placeholder="1700"></div><div><label>hasta</label><input type="number" id="f_a2" placeholder="2026"></div></div>
+        <div class="fila"><div><label>Altitud desde (m)</label><input type="number" id="f_h1" placeholder="0"></div><div><label>hasta</label><input type="number" id="f_h2" placeholder="6800"></div></div>
+        <label>Estado de conservación</label><select id="f_estado"><option value="">Todas</option><option value="end">Endémicas del Perú (WCVP)</option><option value="leon">Endémicas según León et al. (2006)</option><option value="ame">Amenazadas (UICN o D.S. 043: CR, EN, VU)</option><option value="cit1">CITES Apéndice I</option></select>
+        <div class="chk"><input type="checkbox" id="f_cand"><label for="f_cand" style="margin:0">Solo registros candidatos para modelamiento</label></div>
+        <div class="chk"><input type="checkbox" id="f_georef" checked><label for="f_georef" style="margin:0">Mostrar coordenadas estimadas (±10 km)</label></div>
+        <div class="chk"><input type="checkbox" id="f_dudosa"><label for="f_dudosa" style="margin:0">Incluir presencia dudosa</label></div>
+        <div class="chk"><input type="checkbox" id="f_dup" checked><label for="f_dup" style="margin:0">Ocultar duplicados</label></div>
+      </details>
+      <details class="plegable"><summary>Filtros taxonómicos avanzados</summary>
+        <label>Subfamilia</label><select id="f_subfamilia"></select>
+        <label>Tribu</label><select id="f_tribu"></select>
+        <label>Subtribu</label><select id="f_subtribu"></select>
+      </details>
+      <div class="fila" style="margin-top:10px"><button id="limpiar">Limpiar filtros</button><button class="prim" id="encuadrar">Acercar al filtro</button></div>
     </section>
     <section id="unidad_sec" style="display:none">
       <h2 id="unidad_tit"></h2>
@@ -208,11 +268,7 @@ button.prim { background:var(--azul); color:#fff; }
       <h2>Ficha de la especie</h2>
       <div id="ficha"></div>
     </section>
-    <section>
-      <h2>Resultado</h2>
-      <div id="resumen"></div>
-      <p class="nota">Con «Ocultar duplicados» activado, una colecta que aparece en varias fuentes se cuenta una sola vez. Los registros sin coordenadas cuentan en la riqueza por departamento (y por provincia o distrito si la fuente los nombra), no en los puntos.</p>
-    </section>
+
     <section>
       <h2>Especies del filtro</h2>
       <div id="lista"></div>
@@ -224,10 +280,50 @@ button.prim { background:var(--azul); color:#fff; }
   <div id="mapa"></div>
 </div>
 
+<div id="v_inicio" class="vista"><div class="pagina">
+  <div class="portada">
+    <h1>Descubre las orquídeas del Perú</h1>
+    <p>Explora especies, conoce dónde han sido registradas y consulta las fuentes que documentan su presencia.</p>
+    <div class="botones"><button class="grande prim" data-ir="mapa">Explorar el mapa</button><button class="grande" data-ir="especies">Conocer las especies</button><button class="grande" data-ir="deps">Descubrir mi departamento</button></div>
+  </div>
+  <div class="cifras" id="ini_cifras"></div>
+  <h2 class="sec">Exploraciones sugeridas</h2>
+  <div class="sugeridas" id="ini_sug"></div>
+  <h2 class="sec">Descubre una orquídea</h2>
+  <div id="ini_azar"></div>
+  <h2 class="sec">Del documento al mapa</h2>
+  <div id="exp_documento"></div>
+  <h2 class="sec">Viaje por la altitud</h2>
+  <div id="exp_altitud"></div>
+  <h2 class="sec">¿Qué significa?</h2>
+  <div class="glosario" id="ini_glosario"></div>
+</div></div>
+
+<div id="v_especies" class="vista" hidden><div class="pagina">
+  <h1>Especies</h1>
+  <p class="intro">Especies con nombre aceptado y registros en el Perú. Busque por nombre, género o departamento; cada tarjeta lleva a su ficha y a sus registros en el mapa.</p>
+  <div class="filtros-esp"><input type="text" id="e_buscar" placeholder="Buscar especie…"><select id="e_genero"></select><select id="e_dep"></select>
+    <select id="e_tipo"><option value="">Todas</option><option value="end">Endémicas del Perú</option><option value="ame">Amenazadas o CITES I</option></select></div>
+  <p class="nota" id="e_cuenta"></p>
+  <div class="cat-esp" id="e_lista"></div>
+  <p style="text-align:center"><button id="e_mas">Mostrar más</button></p>
+</div></div>
+
+<div id="v_deps" class="vista" hidden><div class="pagina">
+  <h1>Departamentos</h1>
+  <p class="intro">Elija un departamento para ver sus especies documentadas, sus registros y los documentos que respaldan las menciones sin coordenadas.</p>
+  <div class="dep-botones" id="d_botones"></div>
+  <div id="d_panel"></div>
+</div></div>
+
+<div id="modal" hidden><div class="modal-caja"><button class="cerrar" id="modal_cerrar" aria-label="Cerrar">×</button><div id="modal_cont"></div></div></div>
+
 <div id="v_estad" class="vista" hidden><div class="pagina">
   <h1>Estadísticas del estudio</h1>
   <p class="intro" id="estad_intro"></p>
   <div class="cifras" id="estad_cifras"></div>
+  <p class="nota" id="estad_nota"></p>
+  <div class="pestanas" id="estad_tabs"></div>
   <div class="tarjetas" id="estad_tarjetas"></div>
 </div></div>
 
@@ -242,7 +338,7 @@ button.prim { background:var(--azul); color:#fff; }
     <div><span class="chip CI">CITES I</span> Apéndice I de CITES: comercio internacional prohibido salvo excepciones.</div>
     <div><span class="chip en">endémica</span> Solo se conoce del Perú, según la distribución de WCVP.</div>
     <div><span class="chip leon">León</span> Endémica según el Libro rojo de las plantas endémicas del Perú (León et al. 2006).</div>
-    <div><span class="chip nv">sin validar</span> El nombre no coincide exactamente con WCVP.</div>
+    <div><span class="chip nv">pendiente de revisión</span> Nombre pendiente de revisión taxonómica: no coincide exactamente con WCVP.</div>
     <div class="nota">El número a la derecha es la cantidad de registros. Clic en una especie para verla en el mapa.</div>
   </div>
   <div id="am_resumen" class="nota"></div>
@@ -254,6 +350,11 @@ button.prim { background:var(--azul); color:#fff; }
 
 <script>
 // Enlace del formulario de solicitud (Apps Script); vacío hasta publicarlo
+const cargado = {};
+function cargarScript(src) {
+  if (!cargado[src]) cargado[src] = new Promise((ok, mal) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = mal; document.head.appendChild(s); });
+  return cargado[src];
+}
 const FORMULARIO = 'https://script.google.com/macros/s/AKfycbxg2wS0MUpxzS2k4wTHh0-HK0p4qmXfTc9-P3uZ5s8aRdWCL1_d7eUm0nS0G1d8_i1V6A/exec';
 const D = window.DATOS, N = D.nom.length, T = D.tax;
 const G = 0, ST = 1, TR = 2, SF = 3, ACEP = 4, ESP = 5, END = 6, CIT = 7, UICN = 8, DS = 9, AME = 10, LEON = 11, CLEON = 12;
@@ -289,7 +390,7 @@ document.addEventListener('click', e => { const a = e.target.closest('.ir_solici
 // ---------- vistas ----------
 function verVista(v) {
   document.querySelectorAll('#vistas button').forEach(b => b.classList.toggle('activa', b.dataset.v === v));
-  ['mapa', 'estad', 'amen', 'acerca'].forEach(k => $('v_' + k).hidden = k !== v);
+  ['inicio', 'mapa', 'especies', 'deps', 'estad', 'amen', 'acerca'].forEach(k => $('v_' + k).hidden = k !== v); window.scrollTo(0, 0);
   if (v === 'mapa') setTimeout(() => mapa.invalidateSize(), 50);
 }
 document.querySelectorAll('#vistas button').forEach(b => b.onclick = () => verVista(b.dataset.v));
@@ -318,7 +419,7 @@ function cascada() {
   opciones($('f_subtribu'), unicos(t => (!sf || t[SF] === sf) && (!tr || t[TR] === tr) ? t[ST] : ''), 'Todas');
   opciones($('f_genero'), unicos(t => (!sf || t[SF] === sf) && (!tr || t[TR] === tr) && (!st || t[ST] === st) ? t[G] : ''), 'Todos');
   const g = $('f_genero').value;
-  $('nombres_lista').innerHTML = D.nombres.filter((n, i) => T[i][ESP] && (!g || T[i][G] === g)).slice(0, 4000).map(n => '<option value="' + n + '">').join('');
+  $('nombres_lista').innerHTML = D.nombres.filter((n, i) => T[i][ESP] && (!g || T[i][G] === g)).map(n => '<option value="' + n + '">').join('');
 }
 opciones($('f_dep'), [...D.deps].sort((a, b) => a.localeCompare(b, 'es')), 'Todos');
 cascadaLugar();
@@ -341,7 +442,7 @@ function filtrar() {
   const anioActivo = $('f_a1').value || $('f_a2').value;
   for (let i = 0; i < N; i++) {
     mascara[i] = okNom[D.nom[i]] && (dep < 0 || D.dep[i] === dep) && (prv < 0 || D.prov[i] === prv) && (dst < 0 || D.dist[i] === dst) && (fue < 0 || D.fue[i] === fue) && (!cand || D.cand[i]) && (dud || D.ev[i])
-      && (!dup || !D.dup[i]) && (!anioActivo || (D.anio[i] >= a1 && D.anio[i] <= a2))
+      && (!dup || !D.dup[i]) && (!anioActivo || (D.anio[i] > 0 && D.anio[i] >= a1 && D.anio[i] <= a2))
       && (!altActiva || (D.amin[i] > 0 && D.amax[i] >= h1 && D.amin[i] <= h2)) ? 1 : 0;
   }
   actualizar();
@@ -371,7 +472,7 @@ const FONDOS = {
   no: ['Sin fondo', L.layerGroup()],
 };
 const NOMBRES = L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, maxNativeZoom: 18, pane: 'lineas', attribution: 'Nombres: Esri' });
-let fondoActual = 'sat';
+let fondoActual = 'topo';
 FONDOS[fondoActual][1].addTo(mapa);
 const LIM_DEP = L.geoJSON(window.DEPARTAMENTOS, { renderer: rLin, interactive: false, style: { color: '#ffffff', weight: 1.4, opacity: .9, fill: false } }).addTo(mapa);
 const LIM_PROV = L.geoJSON(window.PROVINCIAS, { renderer: rLin, interactive: false, style: { color: '#ffffff', weight: 0.6, opacity: .7, dashArray: '3 3', fill: false } });
@@ -396,7 +497,7 @@ let RIQ = null, CALOR = null;
 
 // Control de capas
 const ctlCapas = L.control({ position: 'topleft' });
-ctlCapas.onAdd = () => { const d = L.DomUtil.create('details', 'ctl'); d.id = 'capas'; d.open = window.innerWidth > 1100;
+ctlCapas.onAdd = () => { const d = L.DomUtil.create('details', 'ctl'); d.id = 'capas'; d.open = false;
   d.innerHTML = '<summary>Capas y fondo</summary><h4>Fondo</h4>' + Object.entries(FONDOS).map(([k, [n]]) => '<label class="chk"><input type="radio" name="fondo" value="' + k + '"' + (k === fondoActual ? ' checked' : '') + '> ' + n + '</label>').join('')
     + '<label class="chk"><input type="checkbox" id="c_nombres"> Nombres de lugares</label>'
     + '<h4>Registros</h4><label class="chk"><input type="checkbox" id="c_pts" checked> Puntos</label><label class="chk"><input type="checkbox" id="c_agr" checked> Agrupar puntos cercanos</label>'
@@ -428,9 +529,11 @@ $('c_anp').onchange = e => e.target.checked ? ANP.addTo(mapa) : mapa.removeLayer
 if (VAC) $('c_vac').onchange = e => { e.target.checked ? VAC.addTo(mapa) : mapa.removeLayer(VAC); leyenda(); };
 let temaActual = '';
 document.querySelectorAll('input[name=tema]').forEach(r => r.addEventListener('change', () => { if (!r.checked) return;
-  if (temaActual) mapa.removeLayer(tema(temaActual)); temaActual = r.value;
+  if (temaActual && capaTema[temaActual]) mapa.removeLayer(capaTema[temaActual]); temaActual = r.value;
   const le = $('leyEco'); le.hidden = !temaActual; if (!temaActual) return;
-  tema(temaActual).addTo(mapa); const t = TEMAS[temaActual];
+  const k = temaActual;
+  (k === 'ecs' ? cargarScript('datos/capas_ecosistemas.js') : Promise.resolve()).then(() => { if (temaActual === k) tema(k).addTo(mapa); });
+  const t = TEMAS[temaActual];
   le.innerHTML = '<b>' + t[0] + '</b>' + Object.entries(t[3]).map(([n, c]) => '<div><span class="c" style="border-radius:2px;border:1px solid #ccc;background:' + c + '"></span>' + esc(n) + '</div>').join(''); }));
 $('c_riq').onchange = () => actualizar();
 $('c_nivel').onchange = () => { $('c_riq').checked = true; actualizar(); };
@@ -465,18 +568,19 @@ function abrirPunto(m) {
   const i = m.i, t = T[D.nom[i]], d = window.DETALLE[i] || [];
   const sens = SENS(D.nom[i]), inc = sens ? 11000 : D.org[i] === 2 ? (+d[6] || 10000) : +d[6];
   const txtInc = inc ? (inc >= 1000 ? (inc / 1000).toLocaleString('fr-FR', { maximumFractionDigits: 1 }) + ' km' : Math.round(inc) + ' m') : '';
-  const filas = [['Clasificación', [t[SF], t[TR], t[ST]].filter(x => x).join(' › ')], ['Nombre en la fuente', d[1]], ['Fuente', FN(D.fuentes[D.fue[i]])],
+  let filas = [['Clasificación', [t[SF], t[TR], t[ST]].filter(x => x).join(' › ')], ['Nombre en la fuente', d[1]], ['Fuente', FN(D.fuentes[D.fue[i]])],
     ['Departamento', D.deps[D.dep[i]] || ''], ['Provincia', D.prov[i] >= 0 ? nomProv(PROVS[D.prov[i]]) : ''], ['Distrito', D.dist[i] >= 0 ? bonito(DISTS[D.dist[i]][2]) : ''], ['Localidad', d[2]], ['Colector', [d[3], d[4]].filter(x => x).join(' ')], ['Herbario o colección', d[5]],
     ['Año', D.anio[i] || ''], ['Coordenada', sens ? 'Generalizada a 0.1° para proteger la especie (' + D.lat[i].toFixed(1) + ', ' + D.lon[i].toFixed(1) + ')' : (D.org[i] === 2 ? 'Estimada sobre el centro poblado' : 'De la fuente') + ' (' + D.lat[i].toFixed(5) + ', ' + D.lon[i].toFixed(5) + ')'],
     ['Incertidumbre', txtInc ? '±' + txtInc : 'No indicada'], ['Observación geográfica', d[15]],
     ['Altitud', D.amin[i] ? (D.amin[i] === D.amax[i] ? D.amin[i] : D.amin[i] + '–' + D.amax[i]) + ' m' : ''], ['ANP', d[11]],
     ['Condición', d[8]], ['Endémica (WCVP)', t[END]], ['Endémica (León 2006)', t[LEON] ? t[LEON] + (t[CLEON] ? ' (' + t[CLEON] + ')' : '') : ''], ['UICN', t[UICN]], ['D.S. 043-2006-AG', t[DS]], ['CITES', t[CIT] ? 'Apéndice ' + t[CIT] : '']].filter(f => f[1]);
+  if (sens) filas = filas.filter(f => !['Distrito', 'Localidad', 'Colector', 'Herbario o colección', 'ANP', 'Observación geográfica', 'Nombre en la fuente'].includes(f[0]));
   const pag = String(d[13] || '').replace(/;?\s*PDF p\.?\s*[\d,\s–-]+/g, '').trim();
-  const resp = '<div class="respaldo"><b>Respaldo del dato</b>' + [['Fuente', d[7] >= 0 ? window.REFS[d[7]] : ''], ['Página', pag]]
+  const resp = sens ? '<div class="respaldo"><b>Respaldo del dato</b>' + (d[7] >= 0 ? 'Fuente: ' + esc(window.REFS[d[7]]) + '<br>' : '') + 'La localidad, el colector y los enlaces se reservan para proteger la especie; se entregan por solicitud.</div>' : '<div class="respaldo"><b>Respaldo del dato</b>' + [['Fuente', d[7] >= 0 ? window.REFS[d[7]] : ''], ['Página', pag]]
       .filter(x => x[1]).map(x => x[0] + ': ' + esc(x[1])).join('<br>') + (d[12] ? '<details><summary>Texto original del registro</summary><div class="cita">«' + esc(d[12]) + '»</div></details>' : '') + '</div>';
   const ayuda = '<div class="incert">' + (sens ? 'Especie amenazada: su ubicación exacta no se publica. El círculo celeste marca el área de unos 11 km donde está el registro.' : inc ? 'El círculo celeste muestra el área donde puede estar realmente el registro (±' + txtInc + ').' : 'La fuente no indica la incertidumbre de esta coordenada.')
     + ' Cambie el fondo a <b>Satélite</b> para revisar el lugar.</div>';
-  const links = [[URLS(d), 'Ver registro original'], [d[10] ? 'https://doi.org/' + d[10].replace(/^https?:\/\/(dx\.)?doi\.org\//, '') : '', 'Ver publicación (DOI)']].filter(x => x[0])
+  const links = sens ? '' : [[URLS(d), 'Ver registro original'], [d[10] ? 'https://doi.org/' + d[10].replace(/^https?:\/\/(dx\.)?doi\.org\//, '') : '', 'Ver publicación (DOI)']].filter(x => x[0])
       .map(x => '<a href="' + esc(x[0]) + '" target="_blank" rel="noopener">' + x[1] + '</a>').join(' · ');
   if (circulo) mapa.removeLayer(circulo); circulo = null;
   if (inc) circulo = L.circle([D.lat[i], D.lon[i]], { radius: inc, pane: 'incert', color: '#00B4D8', weight: 2, fillColor: '#00B4D8', fillOpacity: .12, interactive: false }).addTo(mapa);
@@ -489,27 +593,31 @@ function abrirPunto(m) {
 let ultimaFicha = -1;
 function ficha(esp) {
   if (esp.size !== 1) { $('ficha_sec').style.display = 'none'; ultimaFicha = -1; return; }
-  const n = [...esp][0], t = T[n], deps = new Set(), fu = new Map(); let hmin = 1e9, hmax = 0, y1 = 9999, y2 = 0, xy = 0, cand = 0;
-  for (let i = 0; i < N; i++) { if (!mascara[i] || D.nom[i] !== n) continue;
+  const n = [...esp][0];
+  $('ficha').innerHTML = fichaClara(n, i => mascara[i]);
+  if (n !== ultimaFicha) { ultimaFicha = n; setTimeout(() => { encuadrar(9); $('ficha_sec').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50); }
+  $('ficha_sec').style.display = '';
+}
+function fichaHTML(n, sel) {
+  const t = T[n], deps = new Set(), fu = new Map(); let hmin = 1e9, hmax = 0, y1 = 9999, y2 = 0, xy = 0, cand = 0;
+  for (let i = 0; i < N; i++) { if (!sel(i) || D.nom[i] !== n) continue;
     if (D.dep[i] >= 0) deps.add(D.deps[D.dep[i]]); fu.set(FN(D.fuentes[D.fue[i]]), (fu.get(FN(D.fuentes[D.fue[i]])) || 0) + 1);
     if (D.amin[i] > 0) { hmin = Math.min(hmin, D.amin[i]); hmax = Math.max(hmax, D.amax[i]); }
     if (D.anio[i]) { y1 = Math.min(y1, D.anio[i]); y2 = Math.max(y2, D.anio[i]); }
     if (D.org[i] === 1) { xy++; if (D.cand[i]) cand++; } }
   const f = [['Clasificación', [t[SF], t[TR], t[ST], t[G]].filter(x => x).join(' › ')], ['Nombre', t[ACEP] ? 'Aceptado o sinónimo resuelto en WCVP' : 'Sin coincidencia exacta en WCVP'],
     ['Endémica (WCVP)', t[END]], ['Endémica (León 2006)', t[LEON] ? t[LEON] + (t[CLEON] ? ' (' + t[CLEON] + ')' : '') : ''], ['UICN', t[UICN]], ['D.S. 043-2006-AG', t[DS]], ['CITES', t[CIT] ? 'Apéndice ' + t[CIT] : ''],
-    ['Departamentos', [...deps].sort((a, b) => a.localeCompare(b, 'es')).join(', ')], ['Altitud registrada', hmax ? hmin.toLocaleString('fr-FR') + '–' + hmax.toLocaleString('fr-FR') + ' m' : ''],
-    ['Años de colecta', y2 ? (y1 === y2 ? y1 : y1 + '–' + y2) : ''], ['Puntos de la fuente', xy + ' (para modelar: ' + cand + ')'],
+    ['Departamentos', [...deps].sort((a, b) => a.localeCompare(b, 'es')).join(', ')], ['Altitud registrada', hmax ? (hmin === hmax ? hmin.toLocaleString('fr-FR') : hmin.toLocaleString('fr-FR') + '–' + hmax.toLocaleString('fr-FR')) + ' m' : ''],
+    ['Años de colecta', y2 ? (y1 === y2 ? y1 : y1 + '–' + y2) : ''], ['Coordenadas de la fuente', xy + ' (candidatas para modelamiento: ' + cand + ')'],
     ['Registros por fuente', [...fu.entries()].sort((a, b) => b[1] - a[1]).map(([a, b]) => a + ' ' + b).join(' · ')]].filter(x => x[1] !== '' && x[1] != null);
   const c = (window.CHECK || {})[D.nombres[n]], bl = (tit, filas) => { filas = filas.filter(x => x[1]); return filas.length ? '<div class="bloque"><b>' + tit + '</b>' + filas.map(x => (x[0] ? x[0] + ': ' : '') + esc(x[1])).join('<br>') + '</div>' : ''; };
   const ext = c ? bl(c[20] ? 'Publicación original (nombre de WCVP)' : 'Publicación original', [['', [c[0], c[1]].filter(x => x).join(', ')], ['Categoría', c[2]]])
     + bl('Ejemplar tipo', [['Estatus y herbario', c[3]], ['País', c[4]], ['Departamento', c[5]], ['Localidad', c[6]], ['Altitud', c[7]], ['Fecha', c[8]], ['Colector y número', [c[9], c[10]].filter(x => x).join(' ')], ['Código', c[11]], ['Figura', c[12]], ['Fuente', String(c[13] || '').replace(/;?\s*PDF p\.?\s*[\d,\s–-]+/g, '').trim()]])
     + (c[14] ? '<div class="bloque"><b>Sinonimia (WCVP)</b><div class="sino">' + esc(c[14]).replace(/ (?=[≡=] )/g, '<br>') + '</div></div>' : '')
-    + bl('Distribución y hábitat', [['Otros países (WCVP)', c[15].replace(/^\(?solo Perú\)?$/i, 'ninguno (solo en el Perú)')], ['Hábito', c[16]], ['Hábitat', c[17]], ['Altitud en el Perú', c[18] ? c[18] + ' m' : '']])
+    + bl('Distribución y hábitat', [['Distribución general (WCVP, texto original)', c[15].replace(/^\(?solo Perú\)?$/i, 'ninguno (solo en el Perú)')], ['Hábito', c[16]], ['Hábitat (texto de la fuente)', c[17]], ['Altitud en el Perú', c[18] ? c[18] + ' m' : '']])
     + (c[19] ? '<div class="bloque"><b>Material peruano</b><div class="sino">' + esc(c[19]).replace(/; /g, '<br>') + '</div></div>' : '') : '';
-  $('ficha').innerHTML = '<h3 style="margin:0 0 6px;font-style:italic">' + esc(D.nombres[n]) + (c && c[0] && !c[20] ? ' <span style="font-style:normal;font-weight:normal;font-size:14px">' + esc(c[0]) + '</span>' : '') + '</h3>'
+  return '<h3 style="margin:0 0 6px;font-style:italic">' + esc(D.nombres[n]) + (c && c[0] && !c[20] ? ' <span style="font-style:normal;font-weight:normal;font-size:14px">' + esc(c[0]) + '</span>' : '') + '</h3>'
     + (c && c[20] ? '<div style="margin:-2px 0 6px;font-size:14px">Nombre aceptado en WCVP: <i>' + esc(c[20]) + '</i> ' + esc(c[0]) + '</div>' : '') + '<table>' + f.map(x => '<tr><td>' + x[0] + '</td><td>' + esc(x[1]) + '</td></tr>').join('') + '</table>' + ext;
-  if (n !== ultimaFicha) { ultimaFicha = n; setTimeout(() => { encuadrar(9); $('ficha_sec').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50); }
-  $('ficha_sec').style.display = '';
 }
 function actualizar() {
   const georef = $('f_georef').checked;
@@ -532,10 +640,10 @@ function actualizar() {
     if (D.org[i] === 1 || (georef && D.org[i] === 2)) { D.org[i] === 1 ? cxy++ : cgeo++; pts.push(i); }
   }
   const acep = [...esp].filter(n => T[n][ACEP]).length;
-  $('resumen').innerHTML = [['Registros', reg], ['Especies aceptadas', acep], ['Nombres sin validar', esp.size - acep], ['Coordenadas de la fuente', cxy], ['Coordenadas estimadas', cgeo], ['Géneros', gen.size],
-    ['Departamentos', porDep.filter(s => s.size).length]].filter(x => x[0] !== 'Nombres sin validar' || x[1]).map(([a, b]) => '<div class="dato"><b>' + b.toLocaleString('fr-FR') + '</b><span>' + a + '</span></div>').join('');
+  $('resumen').innerHTML = [['Registros mostrados', reg], ['Especies aceptadas', acep], ['Nombres pendientes de revisión', esp.size - acep], ['Coordenadas de la fuente', cxy], ['Coordenadas estimadas', cgeo], ['Géneros', gen.size],
+    ['Departamentos', porDep.filter(s => s.size).length]].filter(x => x[0] !== 'Nombres pendientes de revisión' || x[1]).map(([a, b]) => '<div class="dato"><b>' + b.toLocaleString('fr-FR') + '</b><span>' + a + '</span></div>').join('');
   $('lista').innerHTML = [...cuenta.entries()].sort((a, b) => b[1] - a[1]).slice(0, 400)
-    .map(([n, c]) => '<div data-n="' + D.nombres[n] + '"><span><em>' + D.nombres[n] + '</em>' + (T[n][END] === 'Sí' ? ' <span class="chip en">endémica</span>' : '') + (!T[n][ACEP] ? ' <span class="chip nv">sin validar</span>' : '') + '</span><i>' + c.toLocaleString('fr-FR') + '</i></div>').join('') || '<div>Sin resultados</div>';
+    .map(([n, c]) => '<div data-n="' + D.nombres[n] + '"><span><em>' + D.nombres[n] + '</em>' + (T[n][END] === 'Sí' ? ' <span class="chip en">endémica</span>' : '') + (!T[n][ACEP] ? ' <span class="chip nv">pendiente de revisión</span>' : '') + '</span><i>' + c.toLocaleString('fr-FR') + '</i></div>').join('') || '<div>Sin resultados</div>';
   ultimos = pts;
   ficha(esp);
   panelUnidad(U, reg, porProv, regProv, porDist, regDist, gen.size);
@@ -596,7 +704,7 @@ function panelUnidad(U, reg, porProv, regProv, porDist, regDist, nGen) {
   $('unidad_datos').innerHTML = [['Especies aceptadas', U.esp.size], ['Registros', reg], ['Géneros', nGen], ['Endémicas (WCVP)', U.end.size], ['Endémicas (León)', U.leon.size], ['Amenazadas o CITES I', U.ame.size]]
     .map(([a, b]) => '<div class="dato"><b>' + b.toLocaleString('fr-FR') + '</b><span>' + a + '</span></div>').join('');
   $('unidad_mas').innerHTML = [U.h2 ? 'Altitud registrada: ' + U.h1.toLocaleString('fr-FR') + '–' + U.h2.toLocaleString('fr-FR') + ' m' : '', U.y2 ? 'Colectas de ' + U.y1 + ' a ' + U.y2 : '',
-    U.xy.toLocaleString('fr-FR') + ' coordenadas de la fuente; ' + U.cand.toLocaleString('fr-FR') + ' puntos para modelar', 'Fuentes: ' + [...U.fue].map(f => FN(D.fuentes[f])).sort().join(', ')].filter(x => x).join('<br>');
+    U.xy.toLocaleString('fr-FR') + ' coordenadas de la fuente; ' + U.cand.toLocaleString('fr-FR') + ' registros candidatos para modelamiento', 'Fuentes: ' + [...U.fue].map(f => FN(D.fuentes[f])).sort().join(', ')].filter(x => x).join('<br>');
   let filas = [], tit = '';
   if (!p && !d) { tit = 'Provincias'; filas = PROVS.map((k, j) => [k, nomProv(k), porProv[j].size, regProv[j], 1]).filter(f => provDe(f[0]) === dp); }
   else if (!d) { tit = 'Distritos'; filas = DISTS.map((x, j) => [x[0], bonito(x[2]), porDist[j].size, regDist[j], 2, x[1]]).filter(f => f[5] === p); }
@@ -635,14 +743,14 @@ function amenazadas() {
     filas.push([n, cats, c1]); });
   filas.sort((a, b) => GRADO[b[0]] - GRADO[a[0]] || D.nombres[a[0]].localeCompare(D.nombres[b[0]]));
   const nv = filas.filter(f => !T[f[0]][ACEP]).length;
-  $('am_resumen').textContent = filas.length.toLocaleString('fr-FR') + (tipo === 'leon' ? ' nombres' : ' especies') + (nv ? ' (' + nv + ' con nombre sin validar)' : '');
+  $('am_resumen').textContent = filas.length.toLocaleString('fr-FR') + (tipo === 'leon' ? ' nombres' : ' especies') + (nv ? ' (' + nv + ' con nombre pendiente de revisión)' : '');
   $('am_lista').innerHTML = filas.map(([n, cats, c1]) => '<div data-n="' + esc(D.nombres[n]) + '"><span><em>' + esc(D.nombres[n]) + '</em>'
-    + (T[n][END] === 'Sí' ? ' <span class="chip en">endémica</span>' : '') + (T[n][LEON] === 'Sí' ? ' <span class="chip leon">León</span>' : '') + (!T[n][ACEP] ? ' <span class="chip nv">sin validar</span>' : '') + '</span><span>'
-    + cats.map(c => '<span class="chip ' + c + '">' + c + '</span>').join('') + (c1 ? '<span class="chip CI">CITES I</span>' : '') + ' <i>' + REG_N[n] + '</i></span></div>').join('');
+    + (T[n][END] === 'Sí' ? ' <span class="chip en">endémica</span>' : '') + (T[n][LEON] === 'Sí' ? ' <span class="chip leon">León</span>' : '') + (!T[n][ACEP] ? ' <span class="chip nv">pendiente de revisión</span>' : '') + '</span><span>'
+    + chipsCat(n, tipo) + (c1 ? '<span class="chip CI">CITES I</span>' : '') + ' <i>' + REG_N[n] + '</i></span></div>').join('');
 }
 $('am_cat').onchange = $('am_tipo').onchange = amenazadas; amenazadas();
 $('am_lista').addEventListener('click', e => { const d = e.target.closest('[data-n]'); if (!d) return;
-  $('f_nombre').value = d.dataset.n; verVista('mapa'); filtrar(); });
+  verEnMapa({ nombre: d.dataset.n }); });
 
 // ---------- estadísticas ----------
 (() => {
@@ -650,10 +758,17 @@ $('am_lista').addEventListener('click', e => { const d = e.target.closest('[data
   const nEsp = new Set(), nGen = new Set(); D.nom.forEach((n, i) => { const t = T[n]; if (t[ESP] && t[ACEP] && D.ev[i]) { nEsp.add(n); if (t[G]) nGen.add(t[G]); } });
   const nCheck = Object.keys(window.CHECK || {}).length;
   $('estad_intro').textContent = (X._intro) || 'Resumen gráfico de la base de datos: de dónde vienen los registros, cómo se distribuyen en el país, en el tiempo y en la altitud, qué especies están amenazadas y dónde falta muestrear. Haga clic en una figura para verla en grande.';
-  $('estad_cifras').innerHTML = [[N, 'registros en esta plataforma'], [nCheck, 'especies en la lista del Perú'], [D.fuentes.length, 'fuentes de datos'], [D.pts_base || 0, 'puntos para modelar'], [nGen.size, 'géneros con registros'], [D.deps.length, 'departamentos con registros']]
+  $('estad_cifras').innerHTML = [[N, 'registros en la plataforma'], [nCheck, 'especies en la lista del Perú'], [D.fuentes.length, 'fuentes de datos'], [D.pts_base || 0, 'registros candidatos para modelamiento'], [nGen.size, 'géneros con registros'], [D.deps.length, 'departamentos con registros']]
     .filter(x => x[0]).map(([v, t]) => '<div><b>' + v.toLocaleString('fr-FR') + '</b><span>' + t + '</span></div>').join('');
+  const GRUPOS = [['Diversidad documentada', ['03', '05', '07', '08']], ['Historia y fuentes', ['02', '06', '10', '11', '12', '13']], ['Calidad y vacíos', ['01', '09', '14']]];
+  const grupo = a => GRUPOS.findIndex(g => g[1].includes(a.slice(0, 2)));
+  $('estad_nota').textContent = 'La plataforma muestra los registros con nombre y con presencia en el Perú (explícita o dudosa); no incluye las ausencias ni los géneros que no están en el país. La figura 1 cuenta todos los registros integrados antes de esa selección. En el mapa, por defecto, se ocultan los duplicados y la presencia dudosa, por eso allí el número es menor.';
+  $('estad_tabs').innerHTML = GRUPOS.map((g, k) => '<button data-g="' + k + '"' + (k ? '' : ' class="activa"') + '>' + g[0] + '</button>').join('');
+  $('estad_tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#estad_tabs button').forEach(x => x.classList.toggle('activa', x === b));
+    document.querySelectorAll('#estad_tarjetas .tarjeta').forEach(x => x.hidden = x.dataset.g !== b.dataset.g); });
   $('estad_tarjetas').innerHTML = (window.FIGURAS || []).map((f, k) => { const e = X[f.archivo] || {};
-    return '<article class="tarjeta"><img loading="lazy" src="figuras/' + f.archivo + '" alt="' + esc(f.titulo) + '" data-src="figuras/' + f.archivo + '"><div class="txt"><h3><span class="num">' + (k + 1) + '</span>' + esc(f.titulo) + '</h3>'
+    return '<article class="tarjeta" data-g="' + grupo(f.archivo) + '"' + (grupo(f.archivo) ? ' hidden' : '') + '><img loading="lazy" src="figuras/' + f.archivo + '" alt="' + esc(f.titulo) + '" data-src="figuras/' + f.archivo + '"><div class="txt"><h3><span class="num">' + (k + 1) + '</span>' + esc(f.titulo) + '</h3>'
       + (e.que_muestra ? '<div>' + esc(e.que_muestra) + '</div>' : '') 
       + (e.cifras && e.cifras.length ? '<ul>' + e.cifras.map(c => '<li>' + esc(c) + '</li>').join('') + '</ul>' : '') + (e.ojo ? '<div class="ojo"><b>Atención:</b> ' + esc(e.ojo) + '</div>' : '') + '</div></article>'; }).join('');
   $('estad_tarjetas').addEventListener('click', e => { const im = e.target.closest('img[data-src]'); if (!im) return; $('visor_img').src = im.dataset.src; $('visor').hidden = false; });
@@ -668,11 +783,143 @@ $('am_lista').addEventListener('click', e => { const d = e.target.closest('[data
   + ' fuentes: herbarios y bases digitales (GBIF, Tropicos, AMO, ATRIUM, iNaturalist, bases de expertos), listas de nombres (WCVP, IPNI) y literatura (libros, artículos, tesis e informes).</p>'
   + '<h2>Cómo se armó</h2><p>Los nombres se validaron con WCVP, solo con coincidencia exacta, y la clasificación sigue a Chase et al. (2015) y obras posteriores. Las coordenadas se convirtieron a grados decimales y se probaron contra los límites del INEI; el departamento, la provincia y el distrito de cada registro salen de esos límites. Los duplicados entre fuentes se marcaron sin borrarse.</p>'
   + '<h2>Cómo revisar una coordenada</h2><p>Al hacer clic en un punto se muestra su procedencia (fuente, documento, página, ejemplar) y un círculo celeste con su incertidumbre. Con el fondo <b>Satélite</b> o <b>Calles</b> se puede ver si el lugar coincide con la localidad descrita. Las coordenadas se muestran tal como vienen de la fuente: la plataforma no las corrige.</p>'
-  + '<h2>Puntos para modelar</h2><p>' + npt.toLocaleString('fr-FR') + ' puntos: coordenada cierta de la fuente y presencia explícita, duplicados incluidos y marcados. No entran las coordenadas estimadas (centro poblado, ±10 km), la presencia dudosa, los cultivados ni las coordenadas dudosas.</p>'
+  + '<h2>Registros candidatos para modelamiento</h2><p>' + npt.toLocaleString('fr-FR') + ' registros: coordenada cierta de la fuente y presencia explícita, duplicados incluidos y marcados. No entran las coordenadas estimadas (centro poblado, ±10 km), la presencia dudosa, los cultivados ni las coordenadas dudosas.</p>'
   + '<h2>Conservación y endemismo</h2><p>UICN, D.S. 043-2006-AG, CITES y León et al. (2006) se mantienen separados, cada uno con su fuente. Una especie puede ser endémica y no tener categoría de amenaza.</p>'
   + (D.generalizada ? '<h2>Coordenadas sensibles</h2><p>Las coordenadas de especies amenazadas (CR, EN, VU) y del Apéndice I de CITES están redondeadas a 0.1° (unos 11 km), sin localidad ni texto de respaldo, para protegerlas.</p>' : '')
   + '<h2>Solicitud de datos</h2><p>La plataforma es de consulta. Los registros completos, con su procedencia y las coordenadas exactas, se entregan a quien los solicite con el formulario «Solicitar datos» y acepte las condiciones de uso. Cada solicitud la revisa el equipo del proyecto.</p>'
   + '<h2>Mapas base</h2><p>Satélite y topográfico: Esri. Calles: OpenStreetMap. Relieve: OpenTopoMap. Límites, ríos y capas temáticas: INEI, MINAM, INDECI, IGN y SERNANP.</p>'; })();
+
+// ---------- categorías de conservación con su fuente ----------
+function chipsCat(n, tipo) {
+  const t = T[n], cat = s => ['CR', 'EN', 'VU'].filter(c => new RegExp('\\b' + c + '\\b').test(s || ''));
+  if (tipo === 'leon') return cat(t[CLEON]).map(c => '<span class="chip ' + c + '">León ' + c + '</span>').join('');
+  return cat(t[UICN]).map(c => '<span class="chip ' + c + '">UICN ' + c + '</span>').join('') + cat(t[DS]).map(c => '<span class="chip ' + c + '">D.S. 043 ' + c + '</span>').join('');
+}
+
+// ---------- resúmenes por especie y por departamento (registros únicos con presencia explícita) ----------
+const SP = new Map(), DEP = D.deps.map(() => ({ esp: new Set(), reg: 0, xy: 0, sin: 0, refs: new Map() }));
+for (let i = 0; i < N; i++) {
+  if (!D.ev[i] || D.dup[i]) continue;
+  const n = D.nom[i], t = T[n];
+  if (t[ESP] && t[ACEP]) { let s = SP.get(n); if (!s) SP.set(n, s = { deps: new Set(), reg: 0 }); s.reg++; if (D.dep[i] >= 0) s.deps.add(D.dep[i]); }
+  if (D.dep[i] < 0) continue;
+  const o = DEP[D.dep[i]]; o.reg++; if (t[ESP] && t[ACEP]) o.esp.add(n);
+  if (D.org[i]) o.xy++; else o.sin++;
+}
+const ESPECIES = [...SP.keys()].sort((a, b) => D.nombres[a].localeCompare(D.nombres[b]));
+const nomDep = k => D.deps[k];
+const esAme = n => GRADO[n] > 0 || CI1(n);
+
+// ---------- ficha en ventana ----------
+function abrirFicha(n) {
+  $('modal_cont').innerHTML = fichaClara(n, i => D.ev[i] && !D.dup[i])
+    + '<p style="margin-top:12px"><button class="prim" id="modal_mapa">Ver en el mapa</button></p>';
+  $('modal').hidden = false;
+  $('modal_mapa').onclick = () => { $('modal').hidden = true; verEnMapa({ nombre: D.nombres[n] }); };
+}
+$('modal_cerrar').onclick = () => $('modal').hidden = true;
+$('modal').addEventListener('click', e => { if (e.target.id === 'modal') $('modal').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('modal').hidden = true; });
+
+// Lleva al mapa con un filtro preparado
+function verEnMapa(o) {
+  ['f_subfamilia', 'f_tribu', 'f_subtribu', 'f_genero', 'f_dep', 'f_prov', 'f_dist', 'f_fuente', 'f_nombre', 'f_a1', 'f_a2', 'f_h1', 'f_h2', 'f_estado'].forEach(id => $(id).value = '');
+  cascada(); cascadaLugar();
+  if (o.nombre) $('f_nombre').value = o.nombre;
+  if (o.dep) { $('f_dep').value = o.dep; cascadaLugar(); }
+  if (o.estado) $('f_estado').value = o.estado;
+  if (o.a2) $('f_a2').value = o.a2;
+  verVista('mapa');
+  setTimeout(() => { filtrar(); if (o.dep) acercarUnidad(); else encuadrar(o.nombre ? 9 : 6);
+    if (o.nombre && !ultimos.length) aviso('Esta especie no tiene registros con coordenadas: cuenta en la riqueza de su departamento, pero no aparece como punto.'); }, 120);
+}
+
+// ---------- inicio ----------
+document.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => verVista(b.dataset.ir));
+$('ini_cifras').innerHTML = [[Object.keys(window.CHECK || {}).length, 'especies en la lista del Perú'], [N, 'registros en la plataforma'],
+  [DEP.filter(o => o.reg).length, 'departamentos con registros'], [new Set(ESPECIES.map(n => T[n][G]).filter(x => x)).size, 'géneros con registros']]
+  .map(([v, t]) => '<div><b>' + v.toLocaleString('fr-FR') + '</b><span>' + t + '</span></div>').join('');
+const SUG = [['Orquídeas de Amazonas', { dep: 'Amazonas' }], ['Especies endémicas del Perú', { estado: 'end' }], ['Especies amenazadas (UICN o D.S. 043)', { estado: 'ame' }], ['Registros históricos (antes de 1950)', { a2: 1949 }]];
+$('ini_sug').innerHTML = SUG.map((s, k) => '<button data-k="' + k + '">' + s[0] + '</button>').join('') + '<button data-v="amen">Listas de conservación</button>';
+$('ini_sug').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; if (b.dataset.v) verVista(b.dataset.v); else verEnMapa(SUG[+b.dataset.k][1]); });
+function tarjetaEsp(n) {
+  const t = T[n], c = (window.CHECK || {})[D.nombres[n]] || [], s = SP.get(n) || { deps: new Set(), reg: 0 };
+  const deps = [...s.deps].map(nomDep).sort((a, b) => a.localeCompare(b, 'es'));
+  const hab = [c[16], c[17]].filter(x => x).join(' · ');
+  return '<div class="esp-tarjeta"><h3><i>' + esc(D.nombres[n]) + '</i> <span class="aut">' + esc(c[0] || '') + '</span></h3>'
+    + '<div>' + (t[END] === 'Sí' ? '<span class="chip en">endémica</span>' : '') + chipsCat(n, '') + (CI1(n) ? '<span class="chip CI">CITES I</span>' : '') + '</div>'
+    + '<div class="lin"><b>Departamentos:</b> ' + (deps.length ? esc(deps.join(', ')) : 'sin departamento registrado') + '</div>'
+    + (hab ? '<div class="lin">' + esc(hab.length > 150 ? hab.slice(0, 150) + '…' : hab) + '</div>' : '')
+    + '<div class="nota" style="margin:0">' + s.reg.toLocaleString('fr-FR') + (s.reg === 1 ? ' registro' : ' registros') + '</div>'
+    + '<div class="acc"><button class="prim" data-ficha="' + n + '">Ver ficha</button><button data-mapa="' + n + '">Ver en el mapa</button></div></div>';
+}
+document.addEventListener('click', e => {
+  const f = e.target.closest('[data-ficha]'); if (f) { e.preventDefault(); abrirFicha(+f.dataset.ficha); return; }
+  const m = e.target.closest('[data-mapa]'); if (m) verEnMapa({ nombre: D.nombres[+m.dataset.mapa] });
+});
+function azar() {
+  const c = ESPECIES.filter(n => { const k = (window.CHECK || {})[D.nombres[n]]; return k && (k[16] || k[17]) && !esAme(n) && SP.get(n).deps.size; });
+  $('ini_azar').innerHTML = '<div style="max-width:520px">' + tarjetaEsp(c[Math.floor(Math.random() * c.length)]) + '</div><p><button id="otra">Otra orquídea</button></p>';
+  $('otra').onclick = azar;
+}
+azar();
+const GLOSARIO = [
+  ['Especie endémica', 'Especie que solo se conoce de un territorio; aquí, del Perú. La plataforma usa la distribución de WCVP y, por separado, la lista de León et al. (2006).'],
+  ['Nombre aceptado', 'Nombre que la autoridad taxonómica (WCVP) reconoce como válido para una especie; los demás nombres de la misma especie son sinónimos.'],
+  ['Nombre pendiente de revisión', 'Nombre que aparece en una fuente pero no coincide exactamente con WCVP: puede ser un sinónimo, una variante de escritura o una especie descrita hace poco.'],
+  ['Ejemplar de herbario', 'Planta colectada, prensada y guardada en una colección científica con su colector, número, fecha y lugar. Es la evidencia que respalda un registro.'],
+  ['Ejemplar tipo', 'Ejemplar en que se basó la descripción original de una especie. Fija a qué planta se refiere el nombre.'],
+  ['Incertidumbre de la coordenada', 'Distancia dentro de la cual puede estar el lugar real de la colecta. En el mapa se dibuja como un círculo celeste alrededor del punto.'],
+  ['Registro duplicado', 'La misma colecta reportada por varias fuentes. Se marca sin borrarse; con «Ocultar duplicados» se cuenta una sola vez.'],
+  ['Registro candidato para modelamiento', 'Registro con coordenada de la fuente y presencia explícita. Es un punto de partida: antes de modelar hay que depurar duplicados y sesgos de muestreo.']];
+$('ini_glosario').innerHTML = GLOSARIO.map(([a, b]) => '<details><summary>' + a + '</summary><p>' + b + '</p></details>').join('');
+
+// ---------- especies ----------
+const GENS = [...new Set(ESPECIES.map(n => T[n][G]))].filter(x => x).sort((a, b) => a.localeCompare(b, 'es'));
+$('e_genero').innerHTML = '<option value="">Todos los géneros</option>' + GENS.map(g => '<option>' + esc(g) + '</option>').join('');
+$('e_dep').innerHTML = '<option value="">Todos los departamentos</option>' + D.deps.map((d, k) => [d, k]).sort((a, b) => a[0].localeCompare(b[0], 'es')).map(([d, k]) => '<option value="' + k + '">' + esc(d) + '</option>').join('');
+let eVer = 60, eLista = [];
+function especies() {
+  const q = $('e_buscar').value.trim().toLowerCase(), g = $('e_genero').value, dp = $('e_dep').value, tp = $('e_tipo').value;
+  eLista = ESPECIES.filter(n => (!q || D.nombres[n].toLowerCase().includes(q)) && (!g || T[n][G] === g) && (dp === '' || SP.get(n).deps.has(+dp))
+    && (!tp || (tp === 'end' && T[n][END] === 'Sí') || (tp === 'ame' && esAme(n))));
+  $('e_cuenta').textContent = eLista.length.toLocaleString('fr-FR') + (eLista.length === 1 ? ' especie' : ' especies');
+  $('e_lista').innerHTML = eLista.slice(0, eVer).map(tarjetaEsp).join('') || '<p class="nota">No hay especies con esos criterios.</p>';
+  $('e_mas').hidden = eLista.length <= eVer;
+}
+['e_genero', 'e_dep', 'e_tipo'].forEach(id => $(id).onchange = () => { eVer = 60; especies(); });
+let eEspera; $('e_buscar').oninput = () => { clearTimeout(eEspera); eEspera = setTimeout(() => { eVer = 60; especies(); }, 250); };
+$('e_mas').onclick = () => { eVer += 60; especies(); };
+especies();
+
+// ---------- departamentos ----------
+const DEPS_ORD = D.deps.map((d, k) => k).filter(k => DEP[k].reg).sort((a, b) => D.deps[a].localeCompare(D.deps[b], 'es'));
+$('d_botones').innerHTML = DEPS_ORD.map(k => '<button data-d="' + k + '"><b>' + esc(D.deps[k]) + '</b><span>' + DEP[k].esp.size.toLocaleString('fr-FR') + ' especies</span></button>').join('');
+function verDep(k) {
+  document.querySelectorAll('#d_botones button').forEach(b => b.classList.toggle('activa', +b.dataset.d === k));
+  const o = DEP[k], esp = [...o.esp].sort((a, b) => D.nombres[a].localeCompare(D.nombres[b]));
+  const fd = (window.FUENTES_DEP || {})[D.deps[k]] || { total: 0, docs: [] };
+  $('d_panel').innerHTML = '<div class="dep-panel"><h2>' + esc(D.deps[k]) + '</h2>'
+    + '<div class="cifras">' + [[o.esp.size, 'especies documentadas'], [o.reg, 'registros'], [o.xy, 'registros con coordenadas'], [o.sin, 'registros sin coordenadas']]
+      .map(([v, t]) => '<div><b>' + v.toLocaleString('fr-FR') + '</b><span>' + t + '</span></div>').join('') + '</div>'
+    + '<div class="botones" style="margin-bottom:14px"><button class="prim" id="d_mapa">Ver en el mapa</button><button id="d_esp">Ver especies</button><button id="d_fuentes">Ver fuentes</button></div>'
+    + '<p class="nota">Se cuentan los registros con presencia explícita, una vez cada colecta. Los registros sin coordenadas son evidencia del departamento, pero no aparecen como puntos en el mapa.</p>'
+    + '<div id="d_fuentes_lista"><h3 style="color:var(--azul);margin:14px 0 4px">Documentos de literatura con más registros sin coordenadas</h3>'
+    + (fd.docs.length ? '<p class="nota">La literatura aporta ' + fd.total.toLocaleString('fr-FR') + ' registros sin coordenadas en este departamento. Los documentos que más aportan:</p><ol>' + fd.docs.map(([r, c]) => '<li>' + esc(r) + ' <span class="nota">(' + c.toLocaleString('fr-FR') + (c === 1 ? ' registro' : ' registros') + ')</span></li>').join('') + '</ol>' : '<p class="nota">No hay registros de literatura sin coordenadas en este departamento.</p>') + '</div>'
+    + '<h3 style="color:var(--azul);margin:16px 0 4px">Especies documentadas</h3><div class="lista-esp">' + esp.slice(0, 400).map(n => '<a data-ficha="' + n + '">' + esc(D.nombres[n]) + '</a>').join('') + '</div>'
+    + (esp.length > 400 ? '<p class="nota">Se muestran 400 de ' + esp.length.toLocaleString('fr-FR') + '; use «Ver especies» para ver todas.</p>' : '') + '</div>';
+  $('d_mapa').onclick = () => verEnMapa({ dep: D.deps[k] });
+  $('d_esp').onclick = () => { $('e_dep').value = k; $('e_buscar').value = ''; $('e_genero').value = ''; $('e_tipo').value = ''; eVer = 60; especies(); verVista('especies'); };
+  $('d_fuentes').onclick = () => $('d_fuentes_lista').scrollIntoView({ behavior: 'smooth' });
+  $('d_panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+$('d_botones').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) verDep(+b.dataset.d); });
+
+const fichaClara = (n, sel) => fichaHTML(n, sel).replace(/here designated/gi, 'aquí designado').replace('Categoría: sp. nov.', 'Categoría: especie nueva (sp. nov.)').replace('Categoría: comb. nov.', 'Categoría: nueva combinación (comb. nov.)');
+function aviso(txt) { let a = $('aviso'); if (!a) { a = document.createElement('div'); a.id = 'aviso'; document.body.appendChild(a); }
+  a.textContent = txt; a.hidden = false; clearTimeout(aviso.t); aviso.t = setTimeout(() => a.hidden = true, 6000); a.onclick = () => a.hidden = true; }
+// el detalle de cada registro (34 MB) se carga después de mostrar la página
+Promise.all([1, 2, 3, 4].map(k => cargarScript('datos/detalle_' + k + '.js'))).then(() => cargarScript('experiencias.js'));
 
 filtrar();
 </script>
