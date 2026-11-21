@@ -254,7 +254,7 @@ button.prim { background:var(--azul); color:#fff; }
 
 <script>
 // Enlace del formulario de solicitud (Apps Script); vacío hasta publicarlo
-const FORMULARIO = '';
+const FORMULARIO = 'https://script.google.com/macros/s/AKfycbxg2wS0MUpxzS2k4wTHh0-HK0p4qmXfTc9-P3uZ5s8aRdWCL1_d7eUm0nS0G1d8_i1V6A/exec';
 const D = window.DATOS, N = D.nom.length, T = D.tax;
 const G = 0, ST = 1, TR = 2, SF = 3, ACEP = 4, ESP = 5, END = 6, CIT = 7, UICN = 8, DS = 9, AME = 10, LEON = 11, CLEON = 12;
 const URLS = d => d[9] ? (/^\d\|/.test(d[9]) ? window.PREF[+d[9][0]] + d[9].slice(2) : d[9]) : '';
