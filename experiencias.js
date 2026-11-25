@@ -156,7 +156,7 @@
     let sel = -1;
     function pintarAlt() {
       let filas = '';
-      for (let b = 0; b <= ult; b++) {
+      for (let b = ult; b >= 0; b--) {
         const v = esp[b].length, pc = Math.round(v / maxEsp * 100);
         filas += '<button class="exp-fila' + (b === sel ? ' exp-activa' : '') + '" data-b="' + b + '" aria-label="Franja de ' + fmt(b * PASO) + ' a ' + fmt((b + 1) * PASO) + ' m: ' + pl(v, 'especie', 'especies') + '">'
           + '<span class="exp-et">' + fmt(b * PASO) + '–' + fmt((b + 1) * PASO) + ' m</span>'

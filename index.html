@@ -11,19 +11,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-<script src="datos/registros.js"></script>
-<script>window.DETALLE = {};</script>
-<script src="datos/detalle.js"></script>
-<script src="datos/departamentos.js"></script>
-<script src="datos/provincias.js"></script>
-<script src="datos/anp.js"></script>
-<script src="datos/capas_base.js"></script>
-<script src="datos/capas_extra.js"></script>
-<script src="datos/fuentes_dep.js"></script>
-<script src="datos/figuras.js"></script>
-<script src="datos/vacios.js"></script>
-<script src="datos/checklist.js"></script>
-<script src="datos/explicaciones.js" onerror="window.EXPLICACIONES = {}"></script>
 <style>
 :root { --azul:#1F5135; --azul2:#2E7048; --violeta:#6B4C9A; --morado:#5B2C6F; --naranja:#C55A11; --verde:#2e7d32; --gris:#f3f1ec; --borde:#d9d5cc; --texto:#222; --fondo:#FAF8F3; }
 * { box-sizing:border-box; }
@@ -205,24 +192,150 @@ h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
 
 #aviso { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#2b2b2b; color:#fff; padding:10px 16px; border-radius:8px; z-index:3000; max-width:90vw; font-size:14.5px; cursor:pointer; }
 @media (max-width: 760px) { #barra { flex-wrap:wrap; } #vistas { flex-wrap:wrap; overflow:visible; width:100%; order:3; gap:0; } #vistas button { padding:7px 7px; font-size:13.5px; } }
+
+/* ===== v3: lámina de herbario — tipografía, color y accesibilidad ===== */
+:root{--verde:#1F5135;--verde2:#2E7048;--verde-t:#E4EFE7;--violeta:#6B4C9A;--violeta-t:#EDE7F5;--papel:#FAF8F3;--linea:#E3DED3;--tinta:#22201C;--tinta2:#5C5650;--t-xs:12.8px;--t-s:14px;--t-l:20px;--t-xl:25px;--t-xxl:31px;--t-hero:39px}
+html{background:var(--papel);touch-action:manipulation}
+body{font-size:16px;line-height:1.55}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.saltar{position:absolute;left:-9999px}
+.saltar:focus{left:8px;top:8px;z-index:4000;background:#fff;color:var(--verde);padding:8px 12px;border-radius:4px}
+#cargando{text-align:center;padding:14px;color:var(--tinta2)}
+main{display:contents}
+/* tipografía y ritmo */
+.pagina h1{font-size:var(--t-xxl);line-height:1.15;letter-spacing:-.01em;margin:0 0 10px}
+h2.sec{font-size:var(--t-xl);line-height:1.2;margin:44px 0 14px;padding-top:14px;border-top:1px solid var(--linea)}
+.pagina > p.intro{font-size:17px;line-height:1.6;max-width:40em;color:var(--tinta2)}
+.exp-caja > .exp-tit{display:none}
+/* portada */
+.portada{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:24px;align-items:center;background:radial-gradient(120% 140% at 100% 0%,#2E7048 0%,#1F5135 55%,#183F29 100%);border-radius:14px;padding:44px 40px;position:relative;overflow:hidden}
+.portada h1{font-size:var(--t-hero);line-height:1.1;letter-spacing:-.015em;margin:0 0 12px}
+.portada p{font-size:19px;line-height:1.5;max-width:34em;margin:0 0 24px;color:#E4EFE7;opacity:1}
+.portada-flor{width:220px;height:220px;justify-self:end}
+/* cifras */
+.cifras#ini_cifras{gap:0;margin:28px 0 8px;border-top:2px solid var(--verde);border-bottom:1px solid var(--linea)}
+#ini_cifras div{background:none;border:0;border-radius:0;padding:16px 20px 14px 0;border-right:1px solid var(--linea);margin-right:20px}
+#ini_cifras div:last-child{border-right:0;margin-right:0}
+#ini_cifras b{font-size:36px;line-height:1.1;font-variant-numeric:lining-nums tabular-nums;letter-spacing:-.01em}
+#ini_cifras span{font-size:var(--t-s);color:var(--tinta2)}
+.cifras b,.dato b{font-variant-numeric:tabular-nums}
+/* chips: mismos colores que el mapa y contraste suficiente */
+.chip{font-size:12px;line-height:1.45;padding:0 6px;border-radius:3px;letter-spacing:.02em;vertical-align:1px;border:1px solid transparent}
+.chip.CR{background:#A50021;color:#fff}
+.chip.EN{background:#E06C1A;color:#2A1200}
+.chip.VU{background:#E8B020;color:#3D2E00}
+.chip.CI{background:#5B2C6F;color:#fff}
+.chip.en{background:var(--verde-t);color:var(--verde);border-color:#A9C7B2;font-weight:normal}
+.chip.leon{background:#F3E9DC;color:#6E4A1F;border-color:#D9C2A3;font-weight:normal}
+.chip.nv{background:#EFECE6;color:#555049;border:1px dashed #A39E95;font-weight:normal}
+.chip.fuente{background:#EFECE6;color:#3E3A35}
+/* botones y foco */
+button{transition:background-color .12s,border-color .12s,color .12s}
+button:hover{background:#EEF3EF}
+button.prim:hover,.exp-btn.exp-prim:hover{background:var(--verde2);border-color:var(--verde2)}
+button.grande:hover{background:rgba(255,255,255,.22)}
+button.grande.prim:hover{background:#F1EDF7;color:var(--verde)}
+#vistas button:hover{background:rgba(255,255,255,.06)}
+:focus-visible{outline:2px solid var(--violeta);outline-offset:2px}
+.portada :focus-visible,#barra :focus-visible{outline-color:#C9B6E4}
+/* tarjetas de especie */
+.cat-esp{gap:16px}
+.esp-tarjeta{border-color:var(--linea);border-radius:8px;padding:16px 18px 14px;gap:8px}
+.esp-tarjeta:hover{border-color:#BFB8AA}
+.esp-tarjeta h3{font-size:19px;line-height:1.25}
+.esp-tarjeta h3 .aut{display:block;font-size:var(--t-xs);font-weight:normal;color:var(--tinta2);margin-top:2px}
+.esp-tarjeta > div:nth-child(2):empty{display:none}
+.esp-tarjeta .lin{font-size:15px;line-height:1.45;color:var(--tinta)}
+.esp-tarjeta .lin b{font-weight:normal;font-variant:small-caps;letter-spacing:.04em;color:var(--tinta2)}
+.esp-tarjeta > .nota{font-size:var(--t-s);color:var(--tinta2);font-variant-numeric:tabular-nums}
+.esp-tarjeta .acc{border-top:1px solid #EFEBE3;padding-top:12px;margin-top:auto}
+/* viaje por la altitud */
+.exp-fila{grid-template-columns:96px 1fr;padding:3px 0}
+.exp-et{text-align:right;font-variant-numeric:tabular-nums;color:var(--tinta2);font-size:14px}
+.exp-der{display:grid;grid-template-columns:1fr 15em;gap:10px;align-items:center}
+.exp-pista{height:16px;border-radius:0 3px 3px 0;background:#EDE9E0}
+.exp-barra{border-radius:0 3px 3px 0}
+.exp-val{margin:0;font-size:14px;color:var(--tinta);font-variant-numeric:tabular-nums}
+.exp-fila:focus-visible{outline-offset:0}
+/* panel del mapa */
+#resumen .dato:nth-child(-n+2){background:var(--verde-t)}
+#resumen .dato:nth-child(-n+2) b{font-size:24px}
+#resumen .dato:nth-child(n+3){background:none;border-top:1px solid var(--linea);border-radius:0;padding:6px 2px}
+#resumen .dato:nth-child(n+3) b{font-size:17px}
+section h2{font-size:16px}
+/* leyenda y capas */
+.leyenda{font-size:14px;line-height:1.35}
+#leyenda > div{display:flex;align-items:center;gap:6px;margin:4px 0}
+.leyenda .c{flex:none;width:12px;height:12px;margin:0;box-shadow:0 0 0 1px rgba(0,0,0,.2)}
+details.leyenda summary,#capas summary{font-size:15px;padding:2px 0}
+#capas h4{font-variant:small-caps;letter-spacing:.04em;font-size:14px;color:var(--tinta2);font-weight:normal}
+/* exploraciones sugeridas */
+.sugeridas button{border-color:#CFC8BA;color:var(--verde)}
+.sugeridas button:hover{border-color:var(--violeta);color:var(--violeta);background:var(--violeta-t)}
+/* restos del esquema anterior */
+.guia,.tarjeta .leer{background:#F1EEE6;border-color:var(--linea)}
+.sub span.barra{background:rgba(31,81,53,.12)}
+.tarjeta .num{color:var(--violeta)}
+.amen i{min-width:3.5em;text-align:right;font-variant-numeric:tabular-nums}
+.filtros-esp{grid-template-columns:2fr repeat(3,minmax(0,1fr));max-width:1080px}
+/* filas que ahora son botones */
+.fila-esp,.fila-sub,.enlace-esp,.ampliar{font:inherit;color:inherit;cursor:pointer;text-align:left}
+.fila-esp,.fila-sub{width:100%;border:0;border-radius:0;background:none}
+#lista .fila-esp,#lista_reg .fila-esp{display:flex;justify-content:space-between;gap:8px;padding:5px 8px;border-bottom:1px solid #f2f2f2;font-size:14px}
+#lista_reg{max-height:260px;overflow-y:auto;border:1px solid #eee;border-radius:4px;margin-top:6px}
+#lista .fila-esp i,#lista_reg .fila-esp i{color:var(--tinta2);font-style:normal}
+.amen .fila-esp{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:7px 10px;border-bottom:1px solid #f0f0f0;font-size:15px}
+.sub .fila-sub{display:grid;grid-template-columns:1fr 58px 66px;gap:6px;align-items:center;padding:4px 8px;border-bottom:1px solid #f2f2f2;position:relative;font-size:14px}
+.sub .fila-sub > *:not(.barra){position:relative;z-index:1}
+.sub .fila-sub i{font-style:normal;text-align:right;color:#444}
+.fila-esp:hover,.fila-sub:hover{background:#EEF3EF}
+.amen .fila-esp:hover{background:#F4F0EA}
+.lista-esp .enlace-esp{font-style:italic;font-size:14px;background:var(--violeta-t);border:0;border-radius:4px;padding:3px 8px;color:#333}
+.lista-esp .enlace-esp:hover{background:#e0d6ee}
+.ampliar{display:block;width:100%;padding:0;border:0;border-radius:0;background:#fff;cursor:zoom-in}
+.ampliar img{border-bottom:1px solid #eee}
+#visor .cerrar{position:absolute;top:14px;right:18px;font-size:30px;background:#fff;border:0;border-radius:50%;width:44px;height:44px;line-height:1;color:#333;cursor:pointer}
+.tarjeta img{aspect-ratio:auto;height:auto}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media (pointer:coarse){#vistas button,#solicitar,.sugeridas button,.esp-tarjeta .acc button,.pestanas button,summary{min-height:44px} .chk input{width:20px;height:20px}}
+@media (max-width:760px){
+ .sugeridas{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}.sugeridas button{white-space:nowrap;flex:none}
+ .exp-der{grid-template-columns:1fr;row-gap:2px}.exp-val{font-size:13px}.exp-fila{align-items:start}.exp-et{padding-top:1px}
+ .portada{grid-template-columns:1fr;padding:28px 20px}
+ .portada-flor{position:absolute;right:-30px;top:-24px;width:150px;height:150px;opacity:.25}
+ .portada h1{font-size:28px;position:relative}
+ .portada p{font-size:17px;position:relative}
+ .botones{flex-direction:column;align-items:stretch}
+ button.grande{padding:10px 16px}
+ #ini_cifras{grid-template-columns:1fr 1fr}
+ #ini_cifras div{border-right:0;margin-right:0;padding:12px 0;border-bottom:1px solid var(--linea)}
+ #ini_cifras b{font-size:28px}
+ h2.sec{font-size:22px;margin-top:36px}
+ .filtros-esp{grid-template-columns:1fr 1fr}
+ .filtros-esp input,.filtros-esp #e_genero{grid-column:1 / -1}
+}
 </style>
 </head>
 <body>
-<div id="barra">
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<header id="barra">
   <div class="marca"><b>Orquídeas del Perú</b><span>Registros de herbarios, bases digitales y literatura</span></div>
-  <nav id="vistas">
-    <button data-v="inicio" class="activa">Inicio</button>
-    <button data-v="mapa">Mapa</button>
-    <button data-v="especies">Especies</button>
-    <button data-v="deps">Departamentos</button>
-    <button data-v="estad">Estadísticas</button>
-    <button data-v="amen">Amenazadas y endémicas</button>
-    <button data-v="acerca">Acerca</button>
+  <nav id="vistas" aria-label="Secciones">
+    <button type="button" data-v="inicio" class="activa">Inicio</button>
+    <button type="button" data-v="mapa">Mapa</button>
+    <button type="button" data-v="especies">Especies</button>
+    <button type="button" data-v="deps">Departamentos</button>
+    <button type="button" data-v="estad">Estadísticas</button>
+    <button type="button" data-v="amen">Amenazadas y endémicas</button>
+    <button type="button" data-v="acerca">Acerca</button>
   </nav>
-  <a id="solicitar" href="#" target="_blank" rel="noopener">Solicitar datos</a>
-</div>
+  <a id="solicitar" href="#" target="_blank" rel="noopener">Solicitar datos<span class="visually-hidden"> (abre en otra pestaña)</span></a>
+</header>
+<main id="contenido">
+<p id="cargando" role="status">Cargando datos…</p>
 
 <div id="v_mapa" class="vista" hidden>
+  <h1 class="visually-hidden">Mapa de registros</h1>
   <div id="panel">
     <section>
       <h2>Registros mostrados con los filtros actuales</h2>
@@ -236,24 +349,24 @@ h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
     </section>
     <section>
       <h2>Buscar</h2>
-      <label>Especie (escriba parte del nombre)</label><input type="text" id="f_nombre" list="nombres_lista" placeholder="p. ej. Masdevallia veitchiana"><datalist id="nombres_lista"></datalist>
-      <label>Género</label><select id="f_genero"></select>
-      <label>Departamento</label><select id="f_dep"></select>
-      <div class="fila"><div><label>Provincia</label><select id="f_prov"></select></div><div><label>Distrito</label><select id="f_dist"></select></div></div>
+      <label for="f_nombre">Especie (escriba parte del nombre)</label><input type="text" id="f_nombre" list="nombres_lista" placeholder="p. ej. Masdevallia veitchiana"><datalist id="nombres_lista"></datalist>
+      <label for="f_genero">Género</label><select id="f_genero"></select>
+      <label for="f_dep">Departamento</label><select id="f_dep"></select>
+      <div class="fila"><div><label for="f_prov">Provincia</label><select id="f_prov"></select></div><div><label for="f_dist">Distrito</label><select id="f_dist"></select></div></div>
       <details class="plegable"><summary>Más filtros</summary>
-        <label>Fuente</label><select id="f_fuente"></select>
-        <div class="fila"><div><label>Año desde</label><input type="number" id="f_a1" placeholder="1700"></div><div><label>hasta</label><input type="number" id="f_a2" placeholder="2026"></div></div>
-        <div class="fila"><div><label>Altitud desde (m)</label><input type="number" id="f_h1" placeholder="0"></div><div><label>hasta</label><input type="number" id="f_h2" placeholder="6800"></div></div>
-        <label>Estado de conservación</label><select id="f_estado"><option value="">Todas</option><option value="end">Endémicas del Perú (WCVP)</option><option value="leon">Endémicas según León et al. (2006)</option><option value="ame">Amenazadas (UICN o D.S. 043: CR, EN, VU)</option><option value="cit1">CITES Apéndice I</option></select>
+        <label for="f_fuente">Fuente</label><select id="f_fuente"></select>
+        <div class="fila"><div><label for="f_a1">Año desde</label><input type="number" id="f_a1" placeholder="1700"></div><div><label for="f_a2">hasta</label><input type="number" id="f_a2" placeholder="2026"></div></div>
+        <div class="fila"><div><label for="f_h1">Altitud desde (m)</label><input type="number" id="f_h1" placeholder="0"></div><div><label for="f_h2">hasta</label><input type="number" id="f_h2" placeholder="6800"></div></div>
+        <label for="f_estado">Estado de conservación</label><select id="f_estado"><option value="">Todas</option><option value="end">Endémicas del Perú (WCVP)</option><option value="leon">Endémicas según León et al. (2006)</option><option value="ame">Amenazadas (UICN o D.S. 043: CR, EN, VU)</option><option value="cit1">CITES Apéndice I</option></select>
         <div class="chk"><input type="checkbox" id="f_cand"><label for="f_cand" style="margin:0">Solo registros candidatos para modelamiento</label></div>
         <div class="chk"><input type="checkbox" id="f_georef" checked><label for="f_georef" style="margin:0">Mostrar coordenadas estimadas (±10 km)</label></div>
         <div class="chk"><input type="checkbox" id="f_dudosa"><label for="f_dudosa" style="margin:0">Incluir presencia dudosa</label></div>
         <div class="chk"><input type="checkbox" id="f_dup" checked><label for="f_dup" style="margin:0">Ocultar duplicados</label></div>
       </details>
       <details class="plegable"><summary>Filtros taxonómicos avanzados</summary>
-        <label>Subfamilia</label><select id="f_subfamilia"></select>
-        <label>Tribu</label><select id="f_tribu"></select>
-        <label>Subtribu</label><select id="f_subtribu"></select>
+        <label for="f_subfamilia">Subfamilia</label><select id="f_subfamilia"></select>
+        <label for="f_tribu">Tribu</label><select id="f_tribu"></select>
+        <label for="f_subtribu">Subtribu</label><select id="f_subtribu"></select>
       </details>
       <div class="fila" style="margin-top:10px"><button id="limpiar">Limpiar filtros</button><button class="prim" id="encuadrar">Acercar al filtro</button></div>
     </section>
@@ -282,9 +395,12 @@ h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
 
 <div id="v_inicio" class="vista"><div class="pagina">
   <div class="portada">
+    <div>
     <h1>Descubre las orquídeas del Perú</h1>
     <p>Explora especies, conoce dónde han sido registradas y consulta las fuentes que documentan su presencia.</p>
-    <div class="botones"><button class="grande prim" data-ir="mapa">Explorar el mapa</button><button class="grande" data-ir="especies">Conocer las especies</button><button class="grande" data-ir="deps">Descubrir mi departamento</button></div>
+    <div class="botones"><button type="button" class="grande prim" data-ir="mapa">Explorar el mapa</button><button type="button" class="grande" data-ir="especies">Conocer las especies</button><button type="button" class="grande" data-ir="deps">Descubrir mi departamento</button></div>
+    </div>
+    <svg class="portada-flor" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#C9DCCF" stroke-width="1"><path d="M10 150 Q60 120 100 135 T190 118" opacity=".25"/><path d="M10 170 Q55 140 100 152 T190 136" opacity=".18"/><path d="M10 188 Q50 160 100 170 T190 156" opacity=".12"/></g><g fill="rgba(255,255,255,.04)" stroke="#E4EFE7" stroke-width="1.6"><ellipse cx="100" cy="50" rx="15" ry="40"/><ellipse cx="100" cy="50" rx="15" ry="40" transform="rotate(140 100 92)"/><ellipse cx="100" cy="50" rx="15" ry="40" transform="rotate(-140 100 92)"/><ellipse cx="100" cy="58" rx="12" ry="38" transform="rotate(68 100 92)"/><ellipse cx="100" cy="58" rx="12" ry="38" transform="rotate(-68 100 92)"/></g><path d="M100 98 C80 100 72 122 80 138 C86 150 114 150 120 138 C128 122 120 100 100 98 Z" fill="#6B4C9A" stroke="#C9B6E4" stroke-width="1.6"/><path d="M100 108 L100 136 M92 114 L95 132 M108 114 L105 132" stroke="#C9B6E4" stroke-width="1" fill="none"/><ellipse cx="100" cy="92" rx="5" ry="9" fill="#E4EFE7"/></svg>
   </div>
   <div class="cifras" id="ini_cifras"></div>
   <h2 class="sec">Exploraciones sugeridas</h2>
@@ -302,9 +418,9 @@ h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
 <div id="v_especies" class="vista" hidden><div class="pagina">
   <h1>Especies</h1>
   <p class="intro">Especies con nombre aceptado y registros en el Perú. Busque por nombre, género o departamento; cada tarjeta lleva a su ficha y a sus registros en el mapa.</p>
-  <div class="filtros-esp"><input type="text" id="e_buscar" placeholder="Buscar especie…"><select id="e_genero"></select><select id="e_dep"></select>
-    <select id="e_tipo"><option value="">Todas</option><option value="end">Endémicas del Perú</option><option value="ame">Amenazadas o CITES I</option></select></div>
-  <p class="nota" id="e_cuenta"></p>
+  <div class="filtros-esp"><input type="text" id="e_buscar" aria-label="Buscar especie por nombre" placeholder="Buscar especie…"><select id="e_genero" aria-label="Género"></select><select id="e_dep" aria-label="Departamento"></select>
+    <select id="e_tipo" aria-label="Tipo de especie"><option value="">Todas</option><option value="end">Endémicas del Perú</option><option value="ame">Amenazadas o CITES I</option></select></div>
+  <p class="nota" id="e_cuenta" aria-live="polite"></p>
   <div class="cat-esp" id="e_lista"></div>
   <p style="text-align:center"><button id="e_mas">Mostrar más</button></p>
 </div></div>
@@ -316,7 +432,7 @@ h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
   <div id="d_panel"></div>
 </div></div>
 
-<div id="modal" hidden><div class="modal-caja"><button class="cerrar" id="modal_cerrar" aria-label="Cerrar">×</button><div id="modal_cont"></div></div></div>
+<div id="modal" role="dialog" aria-modal="true" aria-label="Ficha de la especie" hidden><div class="modal-caja"><button class="cerrar" id="modal_cerrar" aria-label="Cerrar">×</button><div id="modal_cont"></div></div></div>
 
 <div id="v_estad" class="vista" hidden><div class="pagina">
   <h1>Estadísticas del estudio</h1>
@@ -329,7 +445,7 @@ h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
 
 <div id="v_amen" class="vista" hidden><div class="pagina">
   <h1>Especies amenazadas y endémicas</h1>
-  <div class="fila" style="max-width:760px"><select id="am_tipo"><option value="ame">Especies amenazadas (UICN, D.S. 043, CITES I)</option><option value="leon">Endémicas según León et al. (2006)</option><option value="wcvp">Endémicas según WCVP</option></select><select id="am_cat" style="max-width:220px"><option value="">Todas las categorías</option><option>CR</option><option>EN</option><option>VU</option><option value="CI">CITES I</option></select></div>
+  <div class="fila" style="max-width:760px"><select id="am_tipo" aria-label="Lista de conservación"><option value="ame">Especies amenazadas (UICN, D.S. 043, CITES I)</option><option value="leon">Endémicas según León et al. (2006)</option><option value="wcvp">Endémicas según WCVP</option></select><select id="am_cat" aria-label="Categoría" style="max-width:220px"><option value="">Todas las categorías</option><option>CR</option><option>EN</option><option>VU</option><option value="CI">CITES I</option></select></div>
   <p id="am_nota" class="intro" style="font-size:15px"></p>
   <div class="leyenda-cat">
     <div><span class="chip CR">CR</span> En peligro crítico: riesgo extremadamente alto de extinción en estado silvestre.</div>
@@ -341,13 +457,27 @@ h2.sec { color:var(--azul); font-size:21px; margin:28px 0 10px; }
     <div><span class="chip nv">pendiente de revisión</span> Nombre pendiente de revisión taxonómica: no coincide exactamente con WCVP.</div>
     <div class="nota">El número a la derecha es la cantidad de registros. Clic en una especie para verla en el mapa.</div>
   </div>
-  <div id="am_resumen" class="nota"></div>
+  <div id="am_resumen" class="nota" aria-live="polite"></div>
   <div id="am_lista" class="amen"></div>
 </div></div>
 
 <div id="v_acerca" class="vista" hidden><div class="pagina texto" id="acerca"></div></div>
-<div id="visor" hidden><img id="visor_img" alt=""></div>
+</main>
+<div id="visor" role="dialog" aria-modal="true" aria-label="Figura ampliada" hidden><button type="button" class="cerrar" id="visor_cerrar" aria-label="Cerrar">×</button><img id="visor_img" alt=""></div>
 
+<script src="datos/registros.js"></script>
+<script>window.DETALLE = {};</script>
+<script src="datos/detalle.js"></script>
+<script src="datos/departamentos.js"></script>
+<script src="datos/provincias.js"></script>
+<script src="datos/anp.js"></script>
+<script src="datos/capas_base.js"></script>
+<script src="datos/capas_extra.js"></script>
+<script src="datos/fuentes_dep.js"></script>
+<script src="datos/figuras.js"></script>
+<script src="datos/vacios.js"></script>
+<script src="datos/checklist.js"></script>
+<script src="datos/explicaciones.js" onerror="window.EXPLICACIONES = {}"></script>
 <script>
 // Enlace del formulario de solicitud (Apps Script); vacío hasta publicarlo
 const cargado = {};
@@ -355,6 +485,7 @@ function cargarScript(src) {
   if (!cargado[src]) cargado[src] = new Promise((ok, mal) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = mal; document.head.appendChild(s); });
   return cargado[src];
 }
+const SUAVE = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 const FORMULARIO = 'https://script.google.com/macros/s/AKfycbxg2wS0MUpxzS2k4wTHh0-HK0p4qmXfTc9-P3uZ5s8aRdWCL1_d7eUm0nS0G1d8_i1V6A/exec';
 const D = window.DATOS, N = D.nom.length, T = D.tax;
 const G = 0, ST = 1, TR = 2, SF = 3, ACEP = 4, ESP = 5, END = 6, CIT = 7, UICN = 8, DS = 9, AME = 10, LEON = 11, CLEON = 12;
@@ -388,12 +519,17 @@ $('solicitar').href = FORMULARIO || '#'; $('solicitar').onclick = irSolicitud;
 document.addEventListener('click', e => { const a = e.target.closest('.ir_solicitud'); if (!a) return; if (FORMULARIO) { a.href = FORMULARIO; a.target = '_blank'; } else irSolicitud(e); });
 
 // ---------- vistas ----------
-function verVista(v) {
-  document.querySelectorAll('#vistas button').forEach(b => b.classList.toggle('activa', b.dataset.v === v));
+const TITULOS = { mapa: 'Mapa', especies: 'Especies', deps: 'Departamentos', estad: 'Estadísticas', amen: 'Amenazadas y endémicas', acerca: 'Acerca' };
+function verVista(v, enfocar) {
+  if (!$('v_' + v)) v = 'inicio';
+  document.querySelectorAll('#vistas button').forEach(b => { b.classList.toggle('activa', b.dataset.v === v); if (b.dataset.v === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  document.title = (TITULOS[v] ? TITULOS[v] + ' · ' : '') + 'Orquídeas del Perú';
+  if (location.hash.slice(1) !== v) history.replaceState(null, '', v === 'inicio' ? location.pathname + location.search : '#' + v);
   ['inicio', 'mapa', 'especies', 'deps', 'estad', 'amen', 'acerca'].forEach(k => $('v_' + k).hidden = k !== v); window.scrollTo(0, 0);
   if (v === 'mapa') setTimeout(() => mapa.invalidateSize(), 50);
+  if (enfocar) { const h = $('v_' + v).querySelector('h1'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
 }
-document.querySelectorAll('#vistas button').forEach(b => b.onclick = () => verVista(b.dataset.v));
+document.querySelectorAll('#vistas button').forEach(b => b.onclick = () => verVista(b.dataset.v, true));
 
 // ---------- filtros ----------
 function cascadaLugar() {
@@ -449,7 +585,7 @@ function filtrar() {
 }
 
 // ---------- mapa Leaflet ----------
-const mapa = L.map('mapa', { preferCanvas: true, zoomControl: false, minZoom: 4, worldCopyJump: false }).setView([-9.3, -75.0], 5);
+const mapa = L.map('mapa', { preferCanvas: true, zoomControl: false, minZoom: 4, worldCopyJump: false, zoomAnimation: SUAVE === 'smooth', fadeAnimation: SUAVE === 'smooth', markerZoomAnimation: SUAVE === 'smooth' }).setView([-9.3, -75.0], 5);
 L.control.zoom({ position: 'topright', zoomInTitle: 'Acercar', zoomOutTitle: 'Alejar' }).addTo(mapa);
 L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(mapa);
 mapa.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
@@ -502,7 +638,7 @@ ctlCapas.onAdd = () => { const d = L.DomUtil.create('details', 'ctl'); d.id = 'c
     + '<label class="chk"><input type="checkbox" id="c_nombres"> Nombres de lugares</label>'
     + '<h4>Registros</h4><label class="chk"><input type="checkbox" id="c_pts" checked> Puntos</label><label class="chk"><input type="checkbox" id="c_agr" checked> Agrupar puntos cercanos</label>'
     + '<label class="chk"><input type="checkbox" id="c_den"> Densidad de registros</label>'
-    + '<div style="margin:3px 0">Color: <select id="c_color"><option value="origen">origen de la coordenada</option><option value="amenaza">categoría de amenaza</option></select></div>'
+    + '<div style="margin:3px 0"><label for="c_color" style="display:inline">Color:</label> <select id="c_color"><option value="origen">origen de la coordenada</option><option value="amenaza">categoría de amenaza</option></select></div>'
     + '<h4>Capas</h4><label class="chk"><input type="checkbox" id="c_riq"> Riqueza por <select id="c_nivel"><option value="0">departamento</option><option value="1">provincia</option><option value="2">distrito</option></select></label>'
     + '<label class="chk"><input type="checkbox" id="c_lim" checked> Límites (provincias al acercarse)</label>'
     + '<label class="chk"><input type="checkbox" id="c_anp"> Áreas naturales protegidas</label>'
@@ -562,7 +698,7 @@ function dibujarPuntos() {
     capaPts.addLayers(ms);
   } else capaPts = L.featureGroup(ms);
   capaPts.on('click', e => abrirPunto(e.layer || e.propagatedFrom));
-  capaPts.addTo(mapa);
+  capaPts.addTo(mapa); etiquetarGrupos();
 }
 function abrirPunto(m) {
   const i = m.i, t = T[D.nom[i]], d = window.DETALLE[i] || [];
@@ -594,8 +730,8 @@ let ultimaFicha = -1;
 function ficha(esp) {
   if (esp.size !== 1) { $('ficha_sec').style.display = 'none'; ultimaFicha = -1; return; }
   const n = [...esp][0];
-  $('ficha').innerHTML = fichaClara(n, i => mascara[i]);
-  if (n !== ultimaFicha) { ultimaFicha = n; setTimeout(() => { encuadrar(9); $('ficha_sec').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50); }
+  $('ficha').innerHTML = fichaClara(n, i => mascara[i]) + registrosTeclado();
+  if (n !== ultimaFicha) { ultimaFicha = n; setTimeout(() => { encuadrar(9); $('ficha_sec').scrollIntoView({ behavior: SUAVE, block: 'start' }); }, 50); }
   $('ficha_sec').style.display = '';
 }
 function fichaHTML(n, sel) {
@@ -643,7 +779,7 @@ function actualizar() {
   $('resumen').innerHTML = [['Registros mostrados', reg], ['Especies aceptadas', acep], ['Nombres pendientes de revisión', esp.size - acep], ['Coordenadas de la fuente', cxy], ['Coordenadas estimadas', cgeo], ['Géneros', gen.size],
     ['Departamentos', porDep.filter(s => s.size).length]].filter(x => x[0] !== 'Nombres pendientes de revisión' || x[1]).map(([a, b]) => '<div class="dato"><b>' + b.toLocaleString('fr-FR') + '</b><span>' + a + '</span></div>').join('');
   $('lista').innerHTML = [...cuenta.entries()].sort((a, b) => b[1] - a[1]).slice(0, 400)
-    .map(([n, c]) => '<div data-n="' + D.nombres[n] + '"><span><em>' + D.nombres[n] + '</em>' + (T[n][END] === 'Sí' ? ' <span class="chip en">endémica</span>' : '') + (!T[n][ACEP] ? ' <span class="chip nv">pendiente de revisión</span>' : '') + '</span><i>' + c.toLocaleString('fr-FR') + '</i></div>').join('') || '<div>Sin resultados</div>';
+    .map(([n, c]) => '<button type="button" class="fila-esp" data-n="' + D.nombres[n] + '"><span><em>' + D.nombres[n] + '</em>' + (T[n][END] === 'Sí' ? ' <span class="chip en">endémica</span>' : '') + (!T[n][ACEP] ? ' <span class="chip nv">pendiente de revisión</span>' : '') + '</span><i>' + c.toLocaleString('fr-FR') + '</i></button>').join('') || '<div>Sin resultados</div>';
   ultimos = pts;
   ficha(esp);
   panelUnidad(U, reg, porProv, regProv, porDist, regDist, gen.size);
@@ -692,7 +828,7 @@ function verUnidad(niv, k) {
   if (niv === 0) { $('f_dep').value = k; $('f_prov').value = ''; $('f_dist').value = ''; }
   else if (niv === 1) { $('f_dep').value = provDe(k); $('f_dist').value = ''; cascadaLugar(); $('f_prov').value = k; }
   else { const d = DISTS.find(x => x[0] === k); if (!d) return; $('f_dep').value = provDe(d[1]); cascadaLugar(); $('f_prov').value = d[1]; cascadaLugar(); $('f_dist').value = k; }
-  cascadaLugar(); filtrar(); acercarUnidad(); verVista('mapa'); $('unidad_sec').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  cascadaLugar(); filtrar(); acercarUnidad(); verVista('mapa'); $('unidad_sec').scrollIntoView({ behavior: SUAVE, block: 'start' }); }
 document.addEventListener('click', e => { const a = e.target.closest('.ver_un'); if (!a) return; e.preventDefault(); mapa.closePopup(); verUnidad(+a.dataset.niv, a.dataset.k); });
 function panelUnidad(U, reg, porProv, regProv, porDist, regDist, nGen) {
   const dp = $('f_dep').value, p = $('f_prov').value, d = $('f_dist').value;
@@ -711,7 +847,7 @@ function panelUnidad(U, reg, porProv, regProv, porDist, regDist, nGen) {
   filas = filas.filter(f => f[3] > 0).sort((a, b) => b[2] - a[2] || b[3] - a[3]);
   const mx = Math.max(1, ...filas.map(f => f[2]));
   $('unidad_sub').innerHTML = filas.length ? '<div class="sub"><div class="cab"><span>' + tit + ' con registros (' + filas.length + ')</span><i>Especies</i><i>Registros</i></div>'
-    + filas.map(f => '<div data-niv="' + f[4] + '" data-k="' + esc(f[0]) + '"><span class="barra" style="width:' + (100 * f[2] / mx).toFixed(1) + '%"></span><span>' + esc(f[1]) + '</span><i>' + f[2] + '</i><i>' + f[3].toLocaleString('fr-FR') + '</i></div>').join('') + '</div>' : '';
+    + filas.map(f => '<button type="button" class="fila-sub" data-niv="' + f[4] + '" data-k="' + esc(f[0]) + '"><span class="barra" style="width:' + (100 * f[2] / mx).toFixed(1) + '%"></span><span>' + esc(f[1]) + '</span><i>' + f[2] + '</i><i>' + f[3].toLocaleString('fr-FR') + '</i></button>').join('') + '</div>' : '';
   const gs = [...U.gen.entries()].map(([g, s]) => [g, s.size]).sort((a, b) => b[1] - a[1]).slice(0, 12);
   $('unidad_gen').innerHTML = gs.length ? '<div class="nota" style="margin-top:8px">Géneros con más especies</div><div class="gen">' + gs.map(([g, n]) => '<span><i>' + esc(g.replace(/ \(.*\)$/, '')) + '</i> ' + n + '</span>').join('') + '</div>' : '';
 }
@@ -744,9 +880,9 @@ function amenazadas() {
   filas.sort((a, b) => GRADO[b[0]] - GRADO[a[0]] || D.nombres[a[0]].localeCompare(D.nombres[b[0]]));
   const nv = filas.filter(f => !T[f[0]][ACEP]).length;
   $('am_resumen').textContent = filas.length.toLocaleString('fr-FR') + (tipo === 'leon' ? ' nombres' : ' especies') + (nv ? ' (' + nv + ' con nombre pendiente de revisión)' : '');
-  $('am_lista').innerHTML = filas.map(([n, cats, c1]) => '<div data-n="' + esc(D.nombres[n]) + '"><span><em>' + esc(D.nombres[n]) + '</em>'
+  $('am_lista').innerHTML = filas.map(([n, cats, c1]) => '<button type="button" class="fila-esp" data-n="' + esc(D.nombres[n]) + '"><span><em>' + esc(D.nombres[n]) + '</em>'
     + (T[n][END] === 'Sí' ? ' <span class="chip en">endémica</span>' : '') + (T[n][LEON] === 'Sí' ? ' <span class="chip leon">León</span>' : '') + (!T[n][ACEP] ? ' <span class="chip nv">pendiente de revisión</span>' : '') + '</span><span>'
-    + chipsCat(n, tipo) + (c1 ? '<span class="chip CI">CITES I</span>' : '') + ' <i>' + REG_N[n] + '</i></span></div>').join('');
+    + chipsCat(n, tipo) + (c1 ? '<span class="chip CI">CITES I</span>' : '') + ' <i>' + REG_N[n] + '</i></span></button>').join('');
 }
 $('am_cat').onchange = $('am_tipo').onchange = amenazadas; amenazadas();
 $('am_lista').addEventListener('click', e => { const d = e.target.closest('[data-n]'); if (!d) return;
@@ -763,16 +899,16 @@ $('am_lista').addEventListener('click', e => { const d = e.target.closest('[data
   const GRUPOS = [['Diversidad documentada', ['03', '05', '07', '08']], ['Historia y fuentes', ['02', '06', '10', '11', '12', '13']], ['Calidad y vacíos', ['01', '09', '14']]];
   const grupo = a => GRUPOS.findIndex(g => g[1].includes(a.slice(0, 2)));
   $('estad_nota').textContent = 'La plataforma muestra los registros con nombre y con presencia en el Perú (explícita o dudosa); no incluye las ausencias ni los géneros que no están en el país. La figura 1 cuenta todos los registros integrados antes de esa selección. En el mapa, por defecto, se ocultan los duplicados y la presencia dudosa, por eso allí el número es menor.';
-  $('estad_tabs').innerHTML = GRUPOS.map((g, k) => '<button data-g="' + k + '"' + (k ? '' : ' class="activa"') + '>' + g[0] + '</button>').join('');
+  $('estad_tabs').innerHTML = GRUPOS.map((g, k) => '<button type="button" data-g="' + k + '" aria-pressed="' + (k ? 'false' : 'true') + '"' + (k ? '' : ' class="activa"') + '>' + g[0] + '</button>').join('');
   $('estad_tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
-    document.querySelectorAll('#estad_tabs button').forEach(x => x.classList.toggle('activa', x === b));
+    document.querySelectorAll('#estad_tabs button').forEach(x => { x.classList.toggle('activa', x === b); x.setAttribute('aria-pressed', x === b); });
     document.querySelectorAll('#estad_tarjetas .tarjeta').forEach(x => x.hidden = x.dataset.g !== b.dataset.g); });
   $('estad_tarjetas').innerHTML = (window.FIGURAS || []).map((f, k) => { const e = X[f.archivo] || {};
-    return '<article class="tarjeta" data-g="' + grupo(f.archivo) + '"' + (grupo(f.archivo) ? ' hidden' : '') + '><img loading="lazy" src="figuras/' + f.archivo + '" alt="' + esc(f.titulo) + '" data-src="figuras/' + f.archivo + '"><div class="txt"><h3><span class="num">' + (k + 1) + '</span>' + esc(f.titulo) + '</h3>'
+    return '<article class="tarjeta" data-g="' + grupo(f.archivo) + '"' + (grupo(f.archivo) ? ' hidden' : '') + '><button type="button" class="ampliar" data-src="figuras/' + f.archivo + '" aria-label="Ampliar figura: ' + esc(f.titulo) + '"><img loading="lazy" src="figuras/' + f.archivo + '" alt="' + esc(f.titulo) + '"></button><div class="txt"><h3><span class="num">' + (k + 1) + '</span>' + esc(f.titulo) + '</h3>'
       + (e.que_muestra ? '<div>' + esc(e.que_muestra) + '</div>' : '') 
       + (e.cifras && e.cifras.length ? '<ul>' + e.cifras.map(c => '<li>' + esc(c) + '</li>').join('') + '</ul>' : '') + (e.ojo ? '<div class="ojo"><b>Atención:</b> ' + esc(e.ojo) + '</div>' : '') + '</div></article>'; }).join('');
-  $('estad_tarjetas').addEventListener('click', e => { const im = e.target.closest('img[data-src]'); if (!im) return; $('visor_img').src = im.dataset.src; $('visor').hidden = false; });
-  $('visor').onclick = () => $('visor').hidden = true;
+  $('estad_tarjetas').addEventListener('click', e => { const im = e.target.closest('.ampliar'); if (!im) return; abrirVisor(im); });
+  $('visor').onclick = e => { if (e.target.id !== 'visor_img') cerrarVisor(); };
   document.addEventListener('keydown', e => { if (e.key === 'Escape') $('visor').hidden = true; });
 })();
 
@@ -814,12 +950,12 @@ const esAme = n => GRADO[n] > 0 || CI1(n);
 function abrirFicha(n) {
   $('modal_cont').innerHTML = fichaClara(n, i => D.ev[i] && !D.dup[i])
     + '<p style="margin-top:12px"><button class="prim" id="modal_mapa">Ver en el mapa</button></p>';
-  $('modal').hidden = false;
-  $('modal_mapa').onclick = () => { $('modal').hidden = true; verEnMapa({ nombre: D.nombres[n] }); };
+  abrirDialogo($('modal'), $('modal_cerrar'));
+  $('modal_mapa').onclick = () => { cerrarDialogo($('modal')); verEnMapa({ nombre: D.nombres[n] }); };
 }
-$('modal_cerrar').onclick = () => $('modal').hidden = true;
-$('modal').addEventListener('click', e => { if (e.target.id === 'modal') $('modal').hidden = true; });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') $('modal').hidden = true; });
+$('modal_cerrar').onclick = () => cerrarDialogo($('modal'));
+$('modal').addEventListener('click', e => { if (e.target.id === 'modal') cerrarDialogo($('modal')); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modal').hidden) cerrarDialogo($('modal')); });
 
 // Lleva al mapa con un filtro preparado
 function verEnMapa(o) {
@@ -906,12 +1042,12 @@ function verDep(k) {
     + '<p class="nota">Se cuentan los registros con presencia explícita, una vez cada colecta. Los registros sin coordenadas son evidencia del departamento, pero no aparecen como puntos en el mapa.</p>'
     + '<div id="d_fuentes_lista"><h3 style="color:var(--azul);margin:14px 0 4px">Documentos de literatura con más registros sin coordenadas</h3>'
     + (fd.docs.length ? '<p class="nota">La literatura aporta ' + fd.total.toLocaleString('fr-FR') + ' registros sin coordenadas en este departamento. Los documentos que más aportan:</p><ol>' + fd.docs.map(([r, c]) => '<li>' + esc(r) + ' <span class="nota">(' + c.toLocaleString('fr-FR') + (c === 1 ? ' registro' : ' registros') + ')</span></li>').join('') + '</ol>' : '<p class="nota">No hay registros de literatura sin coordenadas en este departamento.</p>') + '</div>'
-    + '<h3 style="color:var(--azul);margin:16px 0 4px">Especies documentadas</h3><div class="lista-esp">' + esp.slice(0, 400).map(n => '<a data-ficha="' + n + '">' + esc(D.nombres[n]) + '</a>').join('') + '</div>'
+    + '<h3 style="color:var(--azul);margin:16px 0 4px">Especies documentadas</h3><div class="lista-esp">' + esp.slice(0, 400).map(n => '<button type="button" class="enlace-esp" data-ficha="' + n + '">' + esc(D.nombres[n]) + '</button>').join('') + '</div>'
     + (esp.length > 400 ? '<p class="nota">Se muestran 400 de ' + esp.length.toLocaleString('fr-FR') + '; use «Ver especies» para ver todas.</p>' : '') + '</div>';
   $('d_mapa').onclick = () => verEnMapa({ dep: D.deps[k] });
   $('d_esp').onclick = () => { $('e_dep').value = k; $('e_buscar').value = ''; $('e_genero').value = ''; $('e_tipo').value = ''; eVer = 60; especies(); verVista('especies'); };
-  $('d_fuentes').onclick = () => $('d_fuentes_lista').scrollIntoView({ behavior: 'smooth' });
-  $('d_panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  $('d_fuentes').onclick = () => $('d_fuentes_lista').scrollIntoView({ behavior: SUAVE });
+  $('d_panel').scrollIntoView({ behavior: SUAVE, block: 'start' });
 }
 $('d_botones').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) verDep(+b.dataset.d); });
 
@@ -919,7 +1055,37 @@ const fichaClara = (n, sel) => fichaHTML(n, sel).replace(/here designated/gi, 'a
 function aviso(txt) { let a = $('aviso'); if (!a) { a = document.createElement('div'); a.id = 'aviso'; document.body.appendChild(a); }
   a.textContent = txt; a.hidden = false; clearTimeout(aviso.t); aviso.t = setTimeout(() => a.hidden = true, 6000); a.onclick = () => a.hidden = true; }
 // el detalle de cada registro (34 MB) se carga después de mostrar la página
-Promise.all([1, 2, 3, 4].map(k => cargarScript('datos/detalle_' + k + '.js'))).then(() => cargarScript('experiencias.js'));
+Promise.all([1, 2, 3, 4].map(k => cargarScript('datos/detalle_' + k + '.js'))).then(() => cargarScript('experiencias.js?v=3'));
+
+// ---------- accesibilidad: diálogos, visor, grupos, popups, registros ----------
+let focoPrevio = null;
+function abrirDialogo(d, foco) { focoPrevio = document.activeElement; d.hidden = false; document.body.style.overflow = 'hidden'; foco.focus(); }
+function cerrarDialogo(d) { d.hidden = true; document.body.style.overflow = ''; if (focoPrevio && focoPrevio.focus) focoPrevio.focus(); }
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Tab') return;
+  const d = !$('modal').hidden ? $('modal') : !$('visor').hidden ? $('visor') : null; if (!d) return;
+  const f = [...d.querySelectorAll('button, [href], input, select, [tabindex]:not([tabindex="-1"])')].filter(x => x.offsetParent !== null);
+  if (!f.length) return; const a = f[0], z = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+});
+function abrirVisor(b) { const im = b.querySelector('img'); $('visor_img').src = b.dataset.src; $('visor_img').alt = im ? im.alt : ''; abrirDialogo($('visor'), $('visor_cerrar')); }
+function cerrarVisor() { cerrarDialogo($('visor')); }
+$('visor_cerrar').onclick = cerrarVisor;
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('visor').hidden) cerrarVisor(); });
+function etiquetarGrupos() { setTimeout(() => document.querySelectorAll('.marker-cluster').forEach(e => e.setAttribute('aria-label', 'Grupo de ' + e.textContent + ' registros; pulse para acercar')), 300); }
+mapa.on('zoomend moveend', etiquetarGrupos);
+mapa.on('popupopen', e => { const c = e.popup.getElement().querySelector('.leaflet-popup-close-button'); if (c) { c.setAttribute('aria-label', 'Cerrar'); c.title = 'Cerrar'; } });
+$('mapa').setAttribute('aria-label', 'Mapa de registros. Para abrir un registro con el teclado, elija una especie y use la lista «Registros con coordenadas» del panel.');
+function registrosTeclado() {
+  if (!ultimos.length) return '';
+  const lista = ultimos.slice(0, 150).map(i => '<button type="button" class="fila-esp" data-pt="' + i + '"><span>' + esc([D.deps[D.dep[i]], D.anio[i] || 'sin año'].filter(x => x).join(', ')) + '</span><i>' + (D.org[i] === 2 ? 'estimada' : 'de la fuente') + '</i></button>').join('');
+  return '<details class="plegable"><summary>Registros con coordenadas (' + ultimos.length.toLocaleString('fr-FR') + ')</summary><div id="lista_reg">' + lista + '</div>'
+    + (ultimos.length > 150 ? '<p class="nota">Se muestran 150; acérquese en el mapa para ver los demás.</p>' : '') + '</details>';
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-pt]'); if (!b) return; const i = +b.dataset.pt;
+  mapa.setView([D.lat[i], D.lon[i]], 12, { animate: false }); setTimeout(() => abrirPunto({ i }), 150); });
+$('cargando').hidden = true;
+verVista(location.hash.slice(1) || 'inicio');
 
 filtrar();
 </script>
