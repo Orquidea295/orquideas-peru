@@ -314,6 +314,26 @@ details.leyenda summary,#capas summary{font-size:15px;padding:2px 0}
  .filtros-esp{grid-template-columns:1fr 1fr}
  .filtros-esp input,.filtros-esp #e_genero{grid-column:1 / -1}
 }
+
+.fuentes-barras{display:grid;gap:6px;max-width:760px}
+.fb{display:grid;grid-template-columns:110px 1fr 80px;gap:10px;align-items:center;font-size:15px}
+.fb-n{text-align:right;color:var(--tinta2)}
+.fb-pista{height:14px;background:#EDE9E0;border-radius:0 3px 3px 0}
+.fb-barra{display:block;height:100%;background:var(--verde);border-radius:0 3px 3px 0}
+.fb-v{font-variant-numeric:tabular-nums}
+.fuentes-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:10px}
+.fuente{background:#fff;border:1px solid var(--linea);border-radius:8px;padding:16px 18px}
+.fuente-cab{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.fuente h2{margin:0;font-size:20px;color:var(--verde)}
+.fuente-tipo{font-variant:small-caps;letter-spacing:.04em;color:var(--violeta);font-size:14px}
+.fuente p{font-size:15px;line-height:1.5;margin:8px 0}
+.fuente-cifras{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid #EFEBE3;border-bottom:1px solid #EFEBE3;padding:8px 0;margin:8px 0}
+.fuente-cifras b{display:block;font-size:20px;color:var(--verde);font-variant-numeric:tabular-nums}
+.fuente-cifras span{font-size:13px;color:var(--tinta2)}
+.mision{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0 20px}
+.mision > div{background:#fff;border:1px solid var(--linea);border-left:4px solid var(--violeta);border-radius:6px;padding:12px 16px}
+.mision h2{margin:0 0 6px !important}
+@media (max-width:760px){.mision{grid-template-columns:1fr}.fb{grid-template-columns:84px 1fr 64px;font-size:14px}}
 </style>
 </head>
 <body>
@@ -326,6 +346,7 @@ details.leyenda summary,#capas summary{font-size:15px;padding:2px 0}
     <button type="button" data-v="especies">Especies</button>
     <button type="button" data-v="deps">Departamentos</button>
     <button type="button" data-v="estad">Estadísticas</button>
+    <button type="button" data-v="fuentes">Fuentes</button>
     <button type="button" data-v="amen">Amenazadas y endémicas</button>
     <button type="button" data-v="acerca">Acerca</button>
   </nav>
@@ -403,6 +424,8 @@ details.leyenda summary,#capas summary{font-size:15px;padding:2px 0}
     <svg class="portada-flor" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g fill="none" stroke="#C9DCCF" stroke-width="1"><path d="M10 150 Q60 120 100 135 T190 118" opacity=".25"/><path d="M10 170 Q55 140 100 152 T190 136" opacity=".18"/><path d="M10 188 Q50 160 100 170 T190 156" opacity=".12"/></g><g fill="rgba(255,255,255,.04)" stroke="#E4EFE7" stroke-width="1.6"><ellipse cx="100" cy="50" rx="15" ry="40"/><ellipse cx="100" cy="50" rx="15" ry="40" transform="rotate(140 100 92)"/><ellipse cx="100" cy="50" rx="15" ry="40" transform="rotate(-140 100 92)"/><ellipse cx="100" cy="58" rx="12" ry="38" transform="rotate(68 100 92)"/><ellipse cx="100" cy="58" rx="12" ry="38" transform="rotate(-68 100 92)"/></g><path d="M100 98 C80 100 72 122 80 138 C86 150 114 150 120 138 C128 122 120 100 100 98 Z" fill="#6B4C9A" stroke="#C9B6E4" stroke-width="1.6"/><path d="M100 108 L100 136 M92 114 L95 132 M108 114 L105 132" stroke="#C9B6E4" stroke-width="1" fill="none"/><ellipse cx="100" cy="92" rx="5" ry="9" fill="#E4EFE7"/></svg>
   </div>
   <div class="cifras" id="ini_cifras"></div>
+  <h2 class="sec">¿De dónde vienen los registros?</h2>
+  <div id="ini_fuentes"></div>
   <h2 class="sec">Exploraciones sugeridas</h2>
   <div class="sugeridas" id="ini_sug"></div>
   <h2 class="sec">Descubre una orquídea</h2>
@@ -459,6 +482,13 @@ details.leyenda summary,#capas summary{font-size:15px;padding:2px 0}
   </div>
   <div id="am_resumen" class="nota" aria-live="polite"></div>
   <div id="am_lista" class="amen"></div>
+</div></div>
+
+<div id="v_fuentes" class="vista" hidden><div class="pagina">
+  <h1>Fuentes de datos</h1>
+  <p class="intro">Los registros no vienen de una sola expedición de campo. Se reunieron de colecciones de herbario digitalizadas, observaciones verificadas, listas de nombres y cientos de libros, artículos, tesis e informes, y se depuraron para que cada registro conserve su procedencia. Aquí se muestra qué aporta cada fuente.</p>
+  <div id="f_tarjetas" class="fuentes-lista"></div>
+  <p class="nota" id="f_nota"></p>
 </div></div>
 
 <div id="v_acerca" class="vista" hidden><div class="pagina texto" id="acerca"></div></div>
@@ -519,13 +549,13 @@ $('solicitar').href = FORMULARIO || '#'; $('solicitar').onclick = irSolicitud;
 document.addEventListener('click', e => { const a = e.target.closest('.ir_solicitud'); if (!a) return; if (FORMULARIO) { a.href = FORMULARIO; a.target = '_blank'; } else irSolicitud(e); });
 
 // ---------- vistas ----------
-const TITULOS = { mapa: 'Mapa', especies: 'Especies', deps: 'Departamentos', estad: 'Estadísticas', amen: 'Amenazadas y endémicas', acerca: 'Acerca' };
+const TITULOS = { fuentes: 'Fuentes de datos', mapa: 'Mapa', especies: 'Especies', deps: 'Departamentos', estad: 'Estadísticas', amen: 'Amenazadas y endémicas', acerca: 'Acerca' };
 function verVista(v, enfocar) {
   if (!$('v_' + v)) v = 'inicio';
   document.querySelectorAll('#vistas button').forEach(b => { b.classList.toggle('activa', b.dataset.v === v); if (b.dataset.v === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
   document.title = (TITULOS[v] ? TITULOS[v] + ' · ' : '') + 'Orquídeas del Perú';
   if (location.hash.slice(1) !== v) history.replaceState(null, '', v === 'inicio' ? location.pathname + location.search : '#' + v);
-  ['inicio', 'mapa', 'especies', 'deps', 'estad', 'amen', 'acerca'].forEach(k => $('v_' + k).hidden = k !== v); window.scrollTo(0, 0);
+  ['inicio', 'mapa', 'especies', 'deps', 'estad', 'fuentes', 'amen', 'acerca'].forEach(k => $('v_' + k).hidden = k !== v); window.scrollTo(0, 0);
   if (v === 'mapa') setTimeout(() => mapa.invalidateSize(), 50);
   if (enfocar) { const h = $('v_' + v).querySelector('h1'); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
 }
@@ -915,6 +945,8 @@ $('am_lista').addEventListener('click', e => { const d = e.target.closest('[data
 // ---------- acerca ----------
 (() => { const npt = D.pts_base || D.cand.reduce((a, b) => a + b, 0), nf = D.fuentes.length;
   $('acerca').innerHTML = '<h1>Acerca de la plataforma</h1>'
+  + '<div class="mision"><div><h2>Misión</h2><p>Reunir, depurar y poner a disposición la información sobre las orquídeas del Perú —registros de herbarios, bases digitales y literatura—, con la procedencia de cada dato a la vista, para apoyar la investigación, la conservación y la toma de decisiones.</p></div>'
+  + '<div><h2>Visión</h2><p>Ser la referencia abierta y actualizada sobre la diversidad y la distribución de las orquídeas del Perú, construida con rigor y en colaboración con especialistas e instituciones.</p></div></div>'
   + '<h2>Qué es</h2><p>Base de registros de Orchidaceae del Perú. Reúne ' + N.toLocaleString('fr-FR') + ' registros con presencia en el Perú de ' + nf
   + ' fuentes: herbarios y bases digitales (GBIF, Tropicos, AMO, ATRIUM, iNaturalist, bases de expertos), listas de nombres (WCVP, IPNI) y literatura (libros, artículos, tesis e informes).</p>'
   + '<h2>Cómo se armó</h2><p>Los nombres se validaron con WCVP, solo con coincidencia exacta, y la clasificación sigue a Chase et al. (2015) y obras posteriores. Las coordenadas se convirtieron a grados decimales y se probaron contra los límites del INEI; el departamento, la provincia y el distrito de cada registro salen de esos límites. Los duplicados entre fuentes se marcaron sin borrarse.</p>'
@@ -1086,6 +1118,32 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-pt]'
   mapa.setView([D.lat[i], D.lon[i]], 12, { animate: false }); setTimeout(() => abrirPunto({ i }), 150); });
 $('cargando').hidden = true;
 verVista(location.hash.slice(1) || 'inicio');
+
+// ---------- fuentes de datos ----------
+const FUENTES_INFO = {
+  GBIF: ['Bases digitales', 'Infraestructura Mundial de Información en Biodiversidad: reúne registros de herbarios, museos y observaciones de todo el mundo.', 'https://www.gbif.org'],
+  TROPICOS: ['Herbario digital', 'Base de datos del Jardín Botánico de Missouri, con ejemplares de herbario y su identificación.', 'https://tropicos.org'],
+  AMO: ['Herbario digital', 'Base de datos del Herbario AMO (México) para el Perú, centrada en el género Epidendrum.', ''],
+  ATRIUM: ['Herbario digital', 'Sistema de información del programa Andes to Amazon del Botanical Research Institute of Texas.', 'https://atrium.andesamazon.org'],
+  INATURALIST: ['Observaciones', 'Observaciones fotográficas con grado de investigación, es decir, con identificación confirmada por la comunidad.', 'https://www.inaturalist.org'],
+  LITERATURA: ['Documentos publicados', 'Libros, artículos, tesis e informes leídos página por página. Muchas colectas publicadas no están en ninguna base digital.', ''],
+  EXPERTOS: ['Colectas de especialistas', 'Bases de colectas de expediciones y de especialistas que trabajan en el Perú.', ''],
+  WCVP: ['Lista de nombres', 'World Checklist of Vascular Plants (Real Jardín Botánico de Kew): nombres aceptados y su distribución por país. Aporta nombres, no colectas.', 'https://powo.science.kew.org'],
+  IPNI: ['Lista de nombres', 'Índice Internacional de Nombres de Plantas: dónde y cuándo se publicó cada nombre. Aporta nombres, no colectas.', 'https://www.ipni.org'] };
+const F_REF = { GBIF: /^GBIF\.org/, TROPICOS: /Tropicos/, AMO: /base de datos AMO/, ATRIUM: /Atrium/, INATURALIST: /^iNaturalist/, IPNI: /^IPNI/, EXPERTOS: /expediciones/ };
+const FU = D.fuentes.map(() => ({ reg: 0, xy: 0, esp: new Set() }));
+for (let i = 0; i < N; i++) { const o = FU[D.fue[i]]; o.reg++; if (D.org[i]) o.xy++; const t = T[D.nom[i]]; if (t[ESP] && t[ACEP] && D.ev[i]) o.esp.add(D.nom[i]); }
+const F_ORD = D.fuentes.map((f, k) => k).sort((a, b) => FU[b].reg - FU[a].reg);
+const maxReg = Math.max(...FU.map(o => o.reg));
+$('ini_fuentes').innerHTML = '<div class="fuentes-barras">' + F_ORD.map(k => '<div class="fb"><span class="fb-n">' + FN(D.fuentes[k]) + '</span><span class="fb-pista"><span class="fb-barra" style="width:' + (100 * FU[k].reg / maxReg).toFixed(1) + '%"></span></span><span class="fb-v">' + FU[k].reg.toLocaleString('fr-FR') + '</span></div>').join('')
+  + '</div><p><button type="button" data-ir2="fuentes">Conocer cada fuente</button></p>';
+document.querySelector('[data-ir2]').onclick = () => verVista('fuentes', true);
+$('f_tarjetas').innerHTML = F_ORD.map(k => { const f = D.fuentes[k], inf = FUENTES_INFO[f] || ['', '', ''], o = FU[k];
+  const ref = F_REF[f] ? (window.REFS || []).find(x => F_REF[f].test(x)) : '';
+  return '<article class="fuente"><div class="fuente-cab"><h2>' + FN(f) + '</h2><span class="fuente-tipo">' + inf[0] + '</span></div><p>' + inf[1] + '</p>'
+    + '<div class="fuente-cifras"><div><b>' + o.reg.toLocaleString('fr-FR') + '</b><span>registros (' + (100 * o.reg / N).toLocaleString('fr-FR', { maximumFractionDigits: 1 }) + ' %)</span></div><div><b>' + o.xy.toLocaleString('fr-FR') + '</b><span>con coordenadas</span></div><div><b>' + o.esp.size.toLocaleString('fr-FR') + '</b><span>especies aceptadas</span></div></div>'
+    + (ref ? '<p class="nota"><b>Cita:</b> ' + esc(ref) + '</p>' : '') + (inf[2] ? '<p><a href="' + inf[2] + '" target="_blank" rel="noopener">Visitar ' + FN(f) + '<span class="visually-hidden"> (abre en otra pestaña)</span></a></p>' : '') + '</article>'; }).join('');
+$('f_nota').textContent = 'Una misma colecta puede estar en varias fuentes; en el mapa, con «Ocultar duplicados», se cuenta una sola vez. Cada registro conserva su fuente: al hacer clic en un punto se ve de dónde viene.';
 
 filtrar();
 </script>
